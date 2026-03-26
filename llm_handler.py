@@ -53,7 +53,9 @@ INTENT_PHRASES = {
     "top_products": [
         "top products by billing",
         "highest billed products",
+        "highest billing products",
         "which products have highest billing",
+        "which products have most invoices",
         "top invoice products",
     ],
     "trace_billing": [
@@ -64,6 +66,7 @@ INTENT_PHRASES = {
     ],
     "broken_flows": [
         "broken flow",
+        "broken orders",
         "delivered not billed",
         "billed without delivery",
         "flow anomaly",
@@ -172,6 +175,12 @@ def _heuristic_parse(user_query: str) -> JSONDict:
         if limit is not None:
             out["limit"] = limit
         return out
+
+    if "most invoices" in q and "product" in q:
+        return {"intent": "top_products"}
+
+    if "broken orders" in q:
+        return {"intent": "broken_flows", "type": "delivered_not_billed"}
 
     return {"intent": "unknown"}
 

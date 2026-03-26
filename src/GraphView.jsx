@@ -25,6 +25,8 @@ function GraphView({ apiUrl, highlightedNodeIds = [] }) {
   const [error, setError] = useState("");
   const [selectedNode, setSelectedNode] = useState(null);
   const [hoveredNode, setHoveredNode] = useState(null);
+  const [focusNodeId, setFocusNodeId] = useState(null);
+  const [searchMatchNodeId, setSearchMatchNodeId] = useState(null);
   const [searchText, setSearchText] = useState("");
   const [size, setSize] = useState({ width: 600, height: 400 });
 
@@ -82,6 +84,28 @@ function GraphView({ apiUrl, highlightedNodeIds = [] }) {
   const activeNode = hoveredNode || selectedNode;
   const resultHighlightSet = useMemo(() => new Set(highlightedNodeIds || []), [highlightedNodeIds]);
 
+  const focusNeighborhood = useMemo(() => {
+    const nodes = new Set();
+    const links = new Set();
+
+    if (!focusNodeId) {
+      return { nodes, links };
+    }
+
+    nodes.add(focusNodeId);
+    graphData.links.forEach((link) => {
+      const sourceId = getNodeId(link.source);
+      const targetId = getNodeId(link.target);
+      if (sourceId === focusNodeId || targetId === focusNodeId) {
+        nodes.add(sourceId);
+        nodes.add(targetId);
+        links.add(link);
+      }
+    });
+
+    return { nodes, links };
+  }, [focusNodeId, graphData.links]);
+
   const adjacency = useMemo(() => {
     const nextNodes = new Set();
     const nextLinks = new Set();
@@ -138,7 +162,20 @@ function GraphView({ apiUrl, highlightedNodeIds = [] }) {
     return output;
   }, [adjacency.links, queryLinks]);
 
-  const shouldFade = resultHighlightSet.size > 0;
+  const shouldFade = resultHighlightSet.size > 0 || !!focusNodeId;
+
+  const graphDataToRender = useMemo(() => {
+    if (!focusNodeId) {
+      return graphData;
+    }
+
+    const focusedNodes = graphData.nodes.filter((node) => focusNeighborhood.nodes.has(node.id));
+    const focusedLinks = graphData.links.filter((link) => focusNeighborhood.links.has(link));
+    return {
+      nodes: focusedNodes,
+      links: focusedLinks,
+    };
+  }, [focusNeighborhood.links, focusNeighborhood.nodes, focusNodeId, graphData]);
 
   const handleNodeSearch = () => {
     const query = searchText.trim().toLowerCase();
@@ -158,10 +195,23 @@ function GraphView({ apiUrl, highlightedNodeIds = [] }) {
     }
 
     setSelectedNode(match);
+    setSearchMatchNodeId(match.id);
+    setFocusNodeId(match.id);
 
     if (graphRef.current && typeof match.x === "number" && typeof match.y === "number") {
       graphRef.current.centerAt(match.x, match.y, 700);
       graphRef.current.zoom(4, 700);
+    }
+  };
+
+  const resetGraph = () => {
+    setFocusNodeId(null);
+    setSelectedNode(null);
+    setHoveredNode(null);
+    setSearchMatchNodeId(null);
+    setSearchText("");
+    if (graphRef.current) {
+      graphRef.current.zoomToFit(600, 60);
     }
   };
 
@@ -186,6 +236,9 @@ function GraphView({ apiUrl, highlightedNodeIds = [] }) {
         <button type="button" onClick={handleNodeSearch}>
           Find Node
         </button>
+        <button type="button" onClick={resetGraph}>
+          Reset Graph
+        </button>
       </div>
 
       <div className="graph-canvas" ref={containerRef}>
@@ -197,12 +250,23 @@ function GraphView({ apiUrl, highlightedNodeIds = [] }) {
             ref={graphRef}
             width={size.width}
             height={size.height}
-            graphData={graphData}
+            graphData={graphDataToRender}
             nodeLabel={(node) => `${node.type}: ${node.label}`}
             nodeColor={(node) => {
               const nodeId = node.id;
               const baseColor = TYPE_COLORS[node.type] || TYPE_COLORS.Unknown;
               const isHighlighted = mergedHighlightNodes.has(nodeId);
+              const isFocused = focusNodeId === nodeId;
+              const isNeighbor = focusNodeId && focusNeighborhood.nodes.has(nodeId) && !isFocused;
+              const isSearchMatch = searchMatchNodeId === nodeId;
+
+              if (isFocused || isSearchMatch) {
+                return baseColor;
+              }
+
+              if (isNeighbor) {
+                return baseColor;
+              }
 
               if (!shouldFade) {
                 return isHighlighted || mergedHighlightNodes.size === 0 ? baseColor : "#cbd5e1";
@@ -214,11 +278,34 @@ function GraphView({ apiUrl, highlightedNodeIds = [] }) {
 
               return "#e2e8f0";
             }}
-            nodeRelSize={5}
-            linkWidth={(link) => (mergedHighlightLinks.has(link) ? 2.8 : 1)}
-            linkColor={(link) => (mergedHighlightLinks.has(link) ? "#1d4ed8" : "#d1d5db")}
+            nodeRelSize={6}
+            linkWidth={(link) => {
+              const sourceId = getNodeId(link.source);
+              const targetId = getNodeId(link.target);
+              if (focusNodeId && (sourceId === focusNodeId || targetId === focusNodeId)) {
+                return 3;
+              }
+              if (mergedHighlightLinks.has(link)) {
+                return 2.2;
+              }
+              return 0.8;
+            }}
+            linkColor={(link) => {
+              const sourceId = getNodeId(link.source);
+              const targetId = getNodeId(link.target);
+              if (focusNodeId && (sourceId === focusNodeId || targetId === focusNodeId)) {
+                return "#0f172a";
+              }
+              if (mergedHighlightLinks.has(link)) {
+                return "#1d4ed8";
+              }
+              return "#d1d5db";
+            }}
             onNodeHover={setHoveredNode}
-            onNodeClick={setSelectedNode}
+            onNodeClick={(node) => {
+              setSelectedNode(node);
+              setFocusNodeId(node?.id || null);
+            }}
             cooldownTicks={80}
             enablePanInteraction
             enableZoomInteraction

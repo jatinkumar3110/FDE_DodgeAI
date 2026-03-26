@@ -39,7 +39,7 @@ class GraphErrorBoundary extends Component {
 function App() {
   const [query, setQuery] = useState("");
   const [loading, setLoading] = useState(false);
-  const [graphData, setGraphData] = useState(null);
+  const [graphData, setGraphData] = useState({ nodes: [], links: [] });
   const [highlightNodeIds, setHighlightNodeIds] = useState([]);
   const [lastQuery, setLastQuery] = useState(readLastQuery);
   const [messages, setMessages] = useState([
@@ -65,7 +65,10 @@ function App() {
           throw new Error("Graph request failed");
         }
         const data = await res.json();
-        setGraphData(data);
+        setGraphData({
+          nodes: data?.nodes || [],
+          links: data?.links || [],
+        });
       } catch (e) {
         console.error("Graph load failed", e);
         setGraphData({ nodes: [], links: [] });
@@ -116,7 +119,7 @@ function App() {
       });
 
       if (!response.ok) {
-        throw new Error("Request failed");
+        throw new Error(`Request failed (${response.status})`);
       }
 
       const data = await response.json();
@@ -128,6 +131,7 @@ function App() {
         text: data?.answer || "No response",
         parsedQuery: data?.parsed_query,
         result: data?.result,
+        queryPlan: data?.query_plan || data?.result?.data?.query_plan,
         executionMs: data?.execution_time_ms || elapsedMs,
       };
 
@@ -141,17 +145,13 @@ function App() {
         {
           id: Date.now() + 2,
           role: "system",
-          text: "Error fetching response",
+          text: `Unable to process your request right now. ${error?.message || "Please try again."}`,
         },
       ]);
     } finally {
       setLoading(false);
     }
   };
-
-  if (!graphData) {
-    return <div>Loading...</div>;
-  }
 
   const hasGraph =
     Array.isArray(graphData?.nodes) &&
@@ -160,7 +160,7 @@ function App() {
 
   return (
     <div className="app">
-      <div className="layout-shell">
+      <div className="layout-shell" style={{ gridTemplateColumns: "1.85fr 1fr" }}>
         {hasGraph ? (
           <GraphErrorBoundary
             fallback={
@@ -207,6 +207,13 @@ function App() {
                     </details>
                   )}
 
+                  {message.role === "system" && message.queryPlan && (
+                    <details className="meta-box">
+                      <summary>Query Plan</summary>
+                      <pre>{JSON.stringify(message.queryPlan, null, 2)}</pre>
+                    </details>
+                  )}
+
                   {message.role === "system" && message.result && (
                     <details className="meta-box">
                       <summary>Structured result</summary>
@@ -241,7 +248,7 @@ function App() {
               <div className="message-row system">
                 <div className="message-bubble">
                   <div className="message-role">System</div>
-                  <div className="message-text">Loading...</div>
+                  <div className="message-text">Processing...</div>
                 </div>
               </div>
             )}
