@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import "./styles.css";
 
-const API_URL = "http://127.0.0.1:8000/query";
+const API_URL = "https://YOUR_RENDER_URL/query";
 
 function App() {
   const [query, setQuery] = useState("");
