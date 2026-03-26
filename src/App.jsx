@@ -9,6 +9,7 @@ const GRAPH_API_URL = `${API_BASE_URL}/graph`;
 function App() {
   const [query, setQuery] = useState("");
   const [loading, setLoading] = useState(false);
+  const [graphData, setGraphData] = useState(null);
   const [highlightNodeIds, setHighlightNodeIds] = useState([]);
   const [lastQuery, setLastQuery] = useState(() => localStorage.getItem("erp_last_query") || "");
   const [messages, setMessages] = useState([
@@ -25,6 +26,28 @@ function App() {
       bottomRef.current.scrollIntoView({ behavior: "smooth" });
     }
   }, [messages, loading]);
+
+  useEffect(() => {
+    const loadGraph = async () => {
+      try {
+        const res = await fetch(GRAPH_API_URL);
+        if (!res.ok) {
+          throw new Error("Graph request failed");
+        }
+        const data = await res.json();
+        setGraphData(data);
+      } catch (e) {
+        console.error("Graph load failed", e);
+        setGraphData({ nodes: [], links: [] });
+      }
+    };
+
+    loadGraph();
+  }, []);
+
+  useEffect(() => {
+    console.log("Graph Data:", graphData);
+  }, [graphData]);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -92,10 +115,25 @@ function App() {
     }
   };
 
+  if (!graphData) {
+    return <div>Loading...</div>;
+  }
+
+  const hasGraph =
+    Array.isArray(graphData?.nodes) &&
+    Array.isArray(graphData?.links) &&
+    (graphData.nodes.length > 0 || graphData.links.length > 0);
+
   return (
     <div className="app">
       <div className="layout-shell">
-        <GraphView apiUrl={GRAPH_API_URL} highlightedNodeIds={highlightNodeIds} />
+        {hasGraph ? (
+          <GraphView apiUrl={GRAPH_API_URL} highlightedNodeIds={highlightNodeIds} />
+        ) : (
+          <section className="graph-shell">
+            <div className="graph-state">Graph not available</div>
+          </section>
+        )}
 
         <div className="chat-shell">
           <header className="chat-header">ERP Query Chat</header>
