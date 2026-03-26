@@ -1,9 +1,8 @@
 import React, { Component, Suspense, lazy, useEffect, useRef, useState } from "react";
 import "./styles.css";
 
-const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || "https://fde-dodgeai.onrender.com";
-const QUERY_API_URL = `${API_BASE_URL}/query`;
-const GRAPH_API_URL = `${API_BASE_URL}/graph`;
+const QUERY_API_URL = "https://fde-dodgeai.onrender.com/query";
+const GRAPH_API_URL = "https://fde-dodgeai.onrender.com/graph";
 const LazyGraphView = lazy(() => import("./GraphView"));
 
 const readLastQuery = () => {
