@@ -1,0 +1,20 @@
+entity	rows	pk_choice	field_count
+billing_document_cancellations	80	billingDocument	14
+billing_document_headers	163	billingDocument	14
+billing_document_items	245		9
+business_partner_addresses	8	businessPartner	20
+business_partners	8	businessPartner	19
+customer_company_assignments	8	customer	13
+customer_sales_area_assignments	28		19
+journal_entry_items_accounts_receivable	123	accountingDocument	22
+outbound_delivery_headers	86	deliveryDocument	13
+outbound_delivery_items	137		11
+payments_accounts_receivable	120	accountingDocument	23
+plants	44	plant	14
+product_descriptions	69	product	3
+product_plants	3036		9
+product_storage_locations	16723		5
+products	69	product	17
+sales_order_headers	100	salesOrder	24
+sales_order_items	167		13
+sales_order_schedule_lines	179		6

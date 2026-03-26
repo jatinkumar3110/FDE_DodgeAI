@@ -1,0 +1,1056 @@
+{
+  "key_validation": {
+    "sales_order_headers": [
+      {
+        "columns": [
+          "salesOrder"
+        ],
+        "stats": {
+          "total_rows": 100,
+          "complete_rows": 100,
+          "unique_values": 100,
+          "duplicate_complete_rows": 0,
+          "is_unique_on_complete_rows": true,
+          "is_strict_key": true
+        }
+      }
+    ],
+    "sales_order_items": [
+      {
+        "columns": [
+          "salesOrder",
+          "salesOrderItem"
+        ],
+        "stats": {
+          "total_rows": 167,
+          "complete_rows": 167,
+          "unique_values": 167,
+          "duplicate_complete_rows": 0,
+          "is_unique_on_complete_rows": true,
+          "is_strict_key": true
+        }
+      }
+    ],
+    "sales_order_schedule_lines": [
+      {
+        "columns": [
+          "salesOrder",
+          "salesOrderItem",
+          "scheduleLine"
+        ],
+        "stats": {
+          "total_rows": 179,
+          "complete_rows": 179,
+          "unique_values": 179,
+          "duplicate_complete_rows": 0,
+          "is_unique_on_complete_rows": true,
+          "is_strict_key": true
+        }
+      }
+    ],
+    "outbound_delivery_headers": [
+      {
+        "columns": [
+          "deliveryDocument"
+        ],
+        "stats": {
+          "total_rows": 86,
+          "complete_rows": 86,
+          "unique_values": 86,
+          "duplicate_complete_rows": 0,
+          "is_unique_on_complete_rows": true,
+          "is_strict_key": true
+        }
+      }
+    ],
+    "outbound_delivery_items": [
+      {
+        "columns": [
+          "deliveryDocument",
+          "deliveryDocumentItem"
+        ],
+        "stats": {
+          "total_rows": 137,
+          "complete_rows": 137,
+          "unique_values": 137,
+          "duplicate_complete_rows": 0,
+          "is_unique_on_complete_rows": true,
+          "is_strict_key": true
+        }
+      }
+    ],
+    "billing_document_headers": [
+      {
+        "columns": [
+          "billingDocument"
+        ],
+        "stats": {
+          "total_rows": 163,
+          "complete_rows": 163,
+          "unique_values": 163,
+          "duplicate_complete_rows": 0,
+          "is_unique_on_complete_rows": true,
+          "is_strict_key": true
+        }
+      }
+    ],
+    "billing_document_items": [
+      {
+        "columns": [
+          "billingDocument",
+          "billingDocumentItem"
+        ],
+        "stats": {
+          "total_rows": 245,
+          "complete_rows": 245,
+          "unique_values": 245,
+          "duplicate_complete_rows": 0,
+          "is_unique_on_complete_rows": true,
+          "is_strict_key": true
+        }
+      }
+    ],
+    "billing_document_cancellations": [
+      {
+        "columns": [
+          "billingDocument"
+        ],
+        "stats": {
+          "total_rows": 80,
+          "complete_rows": 80,
+          "unique_values": 80,
+          "duplicate_complete_rows": 0,
+          "is_unique_on_complete_rows": true,
+          "is_strict_key": true
+        }
+      }
+    ],
+    "payments_accounts_receivable": [
+      {
+        "columns": [
+          "accountingDocument"
+        ],
+        "stats": {
+          "total_rows": 120,
+          "complete_rows": 120,
+          "unique_values": 120,
+          "duplicate_complete_rows": 0,
+          "is_unique_on_complete_rows": true,
+          "is_strict_key": true
+        }
+      },
+      {
+        "columns": [
+          "accountingDocument",
+          "accountingDocumentItem"
+        ],
+        "stats": {
+          "total_rows": 120,
+          "complete_rows": 120,
+          "unique_values": 120,
+          "duplicate_complete_rows": 0,
+          "is_unique_on_complete_rows": true,
+          "is_strict_key": true
+        }
+      }
+    ],
+    "journal_entry_items_accounts_receivable": [
+      {
+        "columns": [
+          "accountingDocument"
+        ],
+        "stats": {
+          "total_rows": 123,
+          "complete_rows": 123,
+          "unique_values": 123,
+          "duplicate_complete_rows": 0,
+          "is_unique_on_complete_rows": true,
+          "is_strict_key": true
+        }
+      },
+      {
+        "columns": [
+          "accountingDocument",
+          "accountingDocumentItem"
+        ],
+        "stats": {
+          "total_rows": 123,
+          "complete_rows": 123,
+          "unique_values": 123,
+          "duplicate_complete_rows": 0,
+          "is_unique_on_complete_rows": true,
+          "is_strict_key": true
+        }
+      }
+    ],
+    "business_partners": [
+      {
+        "columns": [
+          "businessPartner"
+        ],
+        "stats": {
+          "total_rows": 8,
+          "complete_rows": 8,
+          "unique_values": 8,
+          "duplicate_complete_rows": 0,
+          "is_unique_on_complete_rows": true,
+          "is_strict_key": true
+        }
+      },
+      {
+        "columns": [
+          "customer"
+        ],
+        "stats": {
+          "total_rows": 8,
+          "complete_rows": 8,
+          "unique_values": 8,
+          "duplicate_complete_rows": 0,
+          "is_unique_on_complete_rows": true,
+          "is_strict_key": true
+        }
+      }
+    ],
+    "business_partner_addresses": [
+      {
+        "columns": [
+          "businessPartner"
+        ],
+        "stats": {
+          "total_rows": 8,
+          "complete_rows": 8,
+          "unique_values": 8,
+          "duplicate_complete_rows": 0,
+          "is_unique_on_complete_rows": true,
+          "is_strict_key": true
+        }
+      },
+      {
+        "columns": [
+          "addressId"
+        ],
+        "stats": {
+          "total_rows": 8,
+          "complete_rows": 8,
+          "unique_values": 8,
+          "duplicate_complete_rows": 0,
+          "is_unique_on_complete_rows": true,
+          "is_strict_key": true
+        }
+      },
+      {
+        "columns": [
+          "addressUuid"
+        ],
+        "stats": {
+          "total_rows": 8,
+          "complete_rows": 8,
+          "unique_values": 8,
+          "duplicate_complete_rows": 0,
+          "is_unique_on_complete_rows": true,
+          "is_strict_key": true
+        }
+      }
+    ],
+    "customer_company_assignments": [
+      {
+        "columns": [
+          "customer"
+        ],
+        "stats": {
+          "total_rows": 8,
+          "complete_rows": 8,
+          "unique_values": 8,
+          "duplicate_complete_rows": 0,
+          "is_unique_on_complete_rows": true,
+          "is_strict_key": true
+        }
+      },
+      {
+        "columns": [
+          "customer",
+          "companyCode"
+        ],
+        "stats": {
+          "total_rows": 8,
+          "complete_rows": 8,
+          "unique_values": 8,
+          "duplicate_complete_rows": 0,
+          "is_unique_on_complete_rows": true,
+          "is_strict_key": true
+        }
+      }
+    ],
+    "customer_sales_area_assignments": [
+      {
+        "columns": [
+          "customer",
+          "salesOrganization",
+          "distributionChannel",
+          "division"
+        ],
+        "stats": {
+          "total_rows": 28,
+          "complete_rows": 28,
+          "unique_values": 28,
+          "duplicate_complete_rows": 0,
+          "is_unique_on_complete_rows": true,
+          "is_strict_key": true
+        }
+      }
+    ],
+    "products": [
+      {
+        "columns": [
+          "product"
+        ],
+        "stats": {
+          "total_rows": 69,
+          "complete_rows": 69,
+          "unique_values": 69,
+          "duplicate_complete_rows": 0,
+          "is_unique_on_complete_rows": true,
+          "is_strict_key": true
+        }
+      }
+    ],
+    "product_descriptions": [
+      {
+        "columns": [
+          "product"
+        ],
+        "stats": {
+          "total_rows": 69,
+          "complete_rows": 69,
+          "unique_values": 69,
+          "duplicate_complete_rows": 0,
+          "is_unique_on_complete_rows": true,
+          "is_strict_key": true
+        }
+      },
+      {
+        "columns": [
+          "product",
+          "language"
+        ],
+        "stats": {
+          "total_rows": 69,
+          "complete_rows": 69,
+          "unique_values": 69,
+          "duplicate_complete_rows": 0,
+          "is_unique_on_complete_rows": true,
+          "is_strict_key": true
+        }
+      }
+    ],
+    "plants": [
+      {
+        "columns": [
+          "plant"
+        ],
+        "stats": {
+          "total_rows": 44,
+          "complete_rows": 44,
+          "unique_values": 44,
+          "duplicate_complete_rows": 0,
+          "is_unique_on_complete_rows": true,
+          "is_strict_key": true
+        }
+      }
+    ],
+    "product_plants": [
+      {
+        "columns": [
+          "product",
+          "plant"
+        ],
+        "stats": {
+          "total_rows": 3036,
+          "complete_rows": 3036,
+          "unique_values": 3036,
+          "duplicate_complete_rows": 0,
+          "is_unique_on_complete_rows": true,
+          "is_strict_key": true
+        }
+      }
+    ],
+    "product_storage_locations": [
+      {
+        "columns": [
+          "product",
+          "plant",
+          "storageLocation"
+        ],
+        "stats": {
+          "total_rows": 16723,
+          "complete_rows": 16723,
+          "unique_values": 16723,
+          "duplicate_complete_rows": 0,
+          "is_unique_on_complete_rows": true,
+          "is_strict_key": true
+        }
+      }
+    ]
+  },
+  "fk_validation": [
+    {
+      "name": "sales_order_items.salesOrder -> sales_order_headers.salesOrder",
+      "child_entity": "sales_order_items",
+      "child_cols": [
+        "salesOrder"
+      ],
+      "parent_entity": "sales_order_headers",
+      "parent_cols": [
+        "salesOrder"
+      ],
+      "stats": {
+        "child_total_rows": 167,
+        "child_complete_fk_rows": 167,
+        "child_null_fk_rows": 0,
+        "parent_distinct_keys": 100,
+        "child_distinct_fk_keys": 100,
+        "matched_distinct_keys": 100,
+        "orphan_distinct_keys": 0,
+        "matched_child_rows": 167,
+        "orphan_child_rows": 0,
+        "match_rate_on_complete_rows": 1.0,
+        "parent_key_coverage": 1.0,
+        "avg_children_per_parent": 1.67,
+        "max_children_per_parent": 12
+      }
+    },
+    {
+      "name": "sales_order_schedule_lines.(salesOrder,salesOrderItem) -> sales_order_items.(salesOrder,salesOrderItem)",
+      "child_entity": "sales_order_schedule_lines",
+      "child_cols": [
+        "salesOrder",
+        "salesOrderItem"
+      ],
+      "parent_entity": "sales_order_items",
+      "parent_cols": [
+        "salesOrder",
+        "salesOrderItem"
+      ],
+      "stats": {
+        "child_total_rows": 179,
+        "child_complete_fk_rows": 179,
+        "child_null_fk_rows": 0,
+        "parent_distinct_keys": 167,
+        "child_distinct_fk_keys": 167,
+        "matched_distinct_keys": 167,
+        "orphan_distinct_keys": 0,
+        "matched_child_rows": 179,
+        "orphan_child_rows": 0,
+        "match_rate_on_complete_rows": 1.0,
+        "parent_key_coverage": 1.0,
+        "avg_children_per_parent": 1.0718562874251496,
+        "max_children_per_parent": 2
+      }
+    },
+    {
+      "name": "outbound_delivery_items.deliveryDocument -> outbound_delivery_headers.deliveryDocument",
+      "child_entity": "outbound_delivery_items",
+      "child_cols": [
+        "deliveryDocument"
+      ],
+      "parent_entity": "outbound_delivery_headers",
+      "parent_cols": [
+        "deliveryDocument"
+      ],
+      "stats": {
+        "child_total_rows": 137,
+        "child_complete_fk_rows": 137,
+        "child_null_fk_rows": 0,
+        "parent_distinct_keys": 86,
+        "child_distinct_fk_keys": 86,
+        "matched_distinct_keys": 86,
+        "orphan_distinct_keys": 0,
+        "matched_child_rows": 137,
+        "orphan_child_rows": 0,
+        "match_rate_on_complete_rows": 1.0,
+        "parent_key_coverage": 1.0,
+        "avg_children_per_parent": 1.5930232558139534,
+        "max_children_per_parent": 12
+      }
+    },
+    {
+      "name": "outbound_delivery_items.referenceSdDocument -> sales_order_headers.salesOrder",
+      "child_entity": "outbound_delivery_items",
+      "child_cols": [
+        "referenceSdDocument"
+      ],
+      "parent_entity": "sales_order_headers",
+      "parent_cols": [
+        "salesOrder"
+      ],
+      "stats": {
+        "child_total_rows": 137,
+        "child_complete_fk_rows": 137,
+        "child_null_fk_rows": 0,
+        "parent_distinct_keys": 100,
+        "child_distinct_fk_keys": 86,
+        "matched_distinct_keys": 86,
+        "orphan_distinct_keys": 0,
+        "matched_child_rows": 137,
+        "orphan_child_rows": 0,
+        "match_rate_on_complete_rows": 1.0,
+        "parent_key_coverage": 0.86,
+        "avg_children_per_parent": 1.5930232558139534,
+        "max_children_per_parent": 12
+      }
+    },
+    {
+      "name": "outbound_delivery_items.(referenceSdDocument,referenceSdDocumentItem) -> sales_order_items.(salesOrder,salesOrderItem)",
+      "child_entity": "outbound_delivery_items",
+      "child_cols": [
+        "referenceSdDocument",
+        "referenceSdDocumentItem"
+      ],
+      "parent_entity": "sales_order_items",
+      "parent_cols": [
+        "salesOrder",
+        "salesOrderItem"
+      ],
+      "stats": {
+        "child_total_rows": 137,
+        "child_complete_fk_rows": 137,
+        "child_null_fk_rows": 0,
+        "parent_distinct_keys": 167,
+        "child_distinct_fk_keys": 137,
+        "matched_distinct_keys": 0,
+        "orphan_distinct_keys": 137,
+        "matched_child_rows": 0,
+        "orphan_child_rows": 137,
+        "match_rate_on_complete_rows": 0.0,
+        "parent_key_coverage": 0.0,
+        "avg_children_per_parent": 0.0,
+        "max_children_per_parent": 0
+      }
+    },
+    {
+      "name": "billing_document_items.billingDocument -> billing_document_headers.billingDocument",
+      "child_entity": "billing_document_items",
+      "child_cols": [
+        "billingDocument"
+      ],
+      "parent_entity": "billing_document_headers",
+      "parent_cols": [
+        "billingDocument"
+      ],
+      "stats": {
+        "child_total_rows": 245,
+        "child_complete_fk_rows": 245,
+        "child_null_fk_rows": 0,
+        "parent_distinct_keys": 163,
+        "child_distinct_fk_keys": 163,
+        "matched_distinct_keys": 163,
+        "orphan_distinct_keys": 0,
+        "matched_child_rows": 245,
+        "orphan_child_rows": 0,
+        "match_rate_on_complete_rows": 1.0,
+        "parent_key_coverage": 1.0,
+        "avg_children_per_parent": 1.5030674846625767,
+        "max_children_per_parent": 12
+      }
+    },
+    {
+      "name": "billing_document_items.referenceSdDocument -> outbound_delivery_headers.deliveryDocument",
+      "child_entity": "billing_document_items",
+      "child_cols": [
+        "referenceSdDocument"
+      ],
+      "parent_entity": "outbound_delivery_headers",
+      "parent_cols": [
+        "deliveryDocument"
+      ],
+      "stats": {
+        "child_total_rows": 245,
+        "child_complete_fk_rows": 245,
+        "child_null_fk_rows": 0,
+        "parent_distinct_keys": 86,
+        "child_distinct_fk_keys": 83,
+        "matched_distinct_keys": 83,
+        "orphan_distinct_keys": 0,
+        "matched_child_rows": 245,
+        "orphan_child_rows": 0,
+        "match_rate_on_complete_rows": 1.0,
+        "parent_key_coverage": 0.9651162790697675,
+        "avg_children_per_parent": 2.9518072289156625,
+        "max_children_per_parent": 24
+      }
+    },
+    {
+      "name": "billing_document_items.(referenceSdDocument,referenceSdDocumentItem) -> outbound_delivery_items.(deliveryDocument,deliveryDocumentItem)",
+      "child_entity": "billing_document_items",
+      "child_cols": [
+        "referenceSdDocument",
+        "referenceSdDocumentItem"
+      ],
+      "parent_entity": "outbound_delivery_items",
+      "parent_cols": [
+        "deliveryDocument",
+        "deliveryDocumentItem"
+      ],
+      "stats": {
+        "child_total_rows": 245,
+        "child_complete_fk_rows": 245,
+        "child_null_fk_rows": 0,
+        "parent_distinct_keys": 137,
+        "child_distinct_fk_keys": 124,
+        "matched_distinct_keys": 0,
+        "orphan_distinct_keys": 124,
+        "matched_child_rows": 0,
+        "orphan_child_rows": 245,
+        "match_rate_on_complete_rows": 0.0,
+        "parent_key_coverage": 0.0,
+        "avg_children_per_parent": 0.0,
+        "max_children_per_parent": 0
+      }
+    },
+    {
+      "name": "billing_document_headers.cancelledBillingDocument -> billing_document_cancellations.billingDocument",
+      "child_entity": "billing_document_headers",
+      "child_cols": [
+        "cancelledBillingDocument"
+      ],
+      "parent_entity": "billing_document_cancellations",
+      "parent_cols": [
+        "billingDocument"
+      ],
+      "stats": {
+        "child_total_rows": 163,
+        "child_complete_fk_rows": 163,
+        "child_null_fk_rows": 0,
+        "parent_distinct_keys": 80,
+        "child_distinct_fk_keys": 81,
+        "matched_distinct_keys": 80,
+        "orphan_distinct_keys": 1,
+        "matched_child_rows": 80,
+        "orphan_child_rows": 83,
+        "match_rate_on_complete_rows": 0.49079754601226994,
+        "parent_key_coverage": 1.0,
+        "avg_children_per_parent": 1.0,
+        "max_children_per_parent": 1
+      }
+    },
+    {
+      "name": "billing_document_headers.accountingDocument -> payments_accounts_receivable.accountingDocument",
+      "child_entity": "billing_document_headers",
+      "child_cols": [
+        "accountingDocument"
+      ],
+      "parent_entity": "payments_accounts_receivable",
+      "parent_cols": [
+        "accountingDocument"
+      ],
+      "stats": {
+        "child_total_rows": 163,
+        "child_complete_fk_rows": 163,
+        "child_null_fk_rows": 0,
+        "parent_distinct_keys": 120,
+        "child_distinct_fk_keys": 163,
+        "matched_distinct_keys": 120,
+        "orphan_distinct_keys": 43,
+        "matched_child_rows": 120,
+        "orphan_child_rows": 43,
+        "match_rate_on_complete_rows": 0.7361963190184049,
+        "parent_key_coverage": 1.0,
+        "avg_children_per_parent": 1.0,
+        "max_children_per_parent": 1
+      }
+    },
+    {
+      "name": "billing_document_headers.accountingDocument -> journal_entry_items_accounts_receivable.accountingDocument",
+      "child_entity": "billing_document_headers",
+      "child_cols": [
+        "accountingDocument"
+      ],
+      "parent_entity": "journal_entry_items_accounts_receivable",
+      "parent_cols": [
+        "accountingDocument"
+      ],
+      "stats": {
+        "child_total_rows": 163,
+        "child_complete_fk_rows": 163,
+        "child_null_fk_rows": 0,
+        "parent_distinct_keys": 123,
+        "child_distinct_fk_keys": 163,
+        "matched_distinct_keys": 123,
+        "orphan_distinct_keys": 40,
+        "matched_child_rows": 123,
+        "orphan_child_rows": 40,
+        "match_rate_on_complete_rows": 0.754601226993865,
+        "parent_key_coverage": 1.0,
+        "avg_children_per_parent": 1.0,
+        "max_children_per_parent": 1
+      }
+    },
+    {
+      "name": "journal_entry_items_accounts_receivable.referenceDocument -> billing_document_headers.billingDocument",
+      "child_entity": "journal_entry_items_accounts_receivable",
+      "child_cols": [
+        "referenceDocument"
+      ],
+      "parent_entity": "billing_document_headers",
+      "parent_cols": [
+        "billingDocument"
+      ],
+      "stats": {
+        "child_total_rows": 123,
+        "child_complete_fk_rows": 123,
+        "child_null_fk_rows": 0,
+        "parent_distinct_keys": 163,
+        "child_distinct_fk_keys": 123,
+        "matched_distinct_keys": 123,
+        "orphan_distinct_keys": 0,
+        "matched_child_rows": 123,
+        "orphan_child_rows": 0,
+        "match_rate_on_complete_rows": 1.0,
+        "parent_key_coverage": 0.754601226993865,
+        "avg_children_per_parent": 1.0,
+        "max_children_per_parent": 1
+      }
+    },
+    {
+      "name": "payments_accounts_receivable.customer -> business_partners.businessPartner",
+      "child_entity": "payments_accounts_receivable",
+      "child_cols": [
+        "customer"
+      ],
+      "parent_entity": "business_partners",
+      "parent_cols": [
+        "businessPartner"
+      ],
+      "stats": {
+        "child_total_rows": 120,
+        "child_complete_fk_rows": 120,
+        "child_null_fk_rows": 0,
+        "parent_distinct_keys": 8,
+        "child_distinct_fk_keys": 2,
+        "matched_distinct_keys": 2,
+        "orphan_distinct_keys": 0,
+        "matched_child_rows": 120,
+        "orphan_child_rows": 0,
+        "match_rate_on_complete_rows": 1.0,
+        "parent_key_coverage": 0.25,
+        "avg_children_per_parent": 60.0,
+        "max_children_per_parent": 106
+      }
+    },
+    {
+      "name": "sales_order_headers.soldToParty -> business_partners.businessPartner",
+      "child_entity": "sales_order_headers",
+      "child_cols": [
+        "soldToParty"
+      ],
+      "parent_entity": "business_partners",
+      "parent_cols": [
+        "businessPartner"
+      ],
+      "stats": {
+        "child_total_rows": 100,
+        "child_complete_fk_rows": 100,
+        "child_null_fk_rows": 0,
+        "parent_distinct_keys": 8,
+        "child_distinct_fk_keys": 8,
+        "matched_distinct_keys": 8,
+        "orphan_distinct_keys": 0,
+        "matched_child_rows": 100,
+        "orphan_child_rows": 0,
+        "match_rate_on_complete_rows": 1.0,
+        "parent_key_coverage": 1.0,
+        "avg_children_per_parent": 12.5,
+        "max_children_per_parent": 72
+      }
+    },
+    {
+      "name": "sales_order_items.material -> products.product",
+      "child_entity": "sales_order_items",
+      "child_cols": [
+        "material"
+      ],
+      "parent_entity": "products",
+      "parent_cols": [
+        "product"
+      ],
+      "stats": {
+        "child_total_rows": 167,
+        "child_complete_fk_rows": 167,
+        "child_null_fk_rows": 0,
+        "parent_distinct_keys": 69,
+        "child_distinct_fk_keys": 69,
+        "matched_distinct_keys": 69,
+        "orphan_distinct_keys": 0,
+        "matched_child_rows": 167,
+        "orphan_child_rows": 0,
+        "match_rate_on_complete_rows": 1.0,
+        "parent_key_coverage": 1.0,
+        "avg_children_per_parent": 2.420289855072464,
+        "max_children_per_parent": 11
+      }
+    },
+    {
+      "name": "outbound_delivery_items.plant -> plants.plant",
+      "child_entity": "outbound_delivery_items",
+      "child_cols": [
+        "plant"
+      ],
+      "parent_entity": "plants",
+      "parent_cols": [
+        "plant"
+      ],
+      "stats": {
+        "child_total_rows": 137,
+        "child_complete_fk_rows": 137,
+        "child_null_fk_rows": 0,
+        "parent_distinct_keys": 44,
+        "child_distinct_fk_keys": 5,
+        "matched_distinct_keys": 5,
+        "orphan_distinct_keys": 0,
+        "matched_child_rows": 137,
+        "orphan_child_rows": 0,
+        "match_rate_on_complete_rows": 1.0,
+        "parent_key_coverage": 0.11363636363636363,
+        "avg_children_per_parent": 27.4,
+        "max_children_per_parent": 110
+      }
+    },
+    {
+      "name": "product_plants.product -> products.product",
+      "child_entity": "product_plants",
+      "child_cols": [
+        "product"
+      ],
+      "parent_entity": "products",
+      "parent_cols": [
+        "product"
+      ],
+      "stats": {
+        "child_total_rows": 3036,
+        "child_complete_fk_rows": 3036,
+        "child_null_fk_rows": 0,
+        "parent_distinct_keys": 69,
+        "child_distinct_fk_keys": 69,
+        "matched_distinct_keys": 69,
+        "orphan_distinct_keys": 0,
+        "matched_child_rows": 3036,
+        "orphan_child_rows": 0,
+        "match_rate_on_complete_rows": 1.0,
+        "parent_key_coverage": 1.0,
+        "avg_children_per_parent": 44.0,
+        "max_children_per_parent": 44
+      }
+    },
+    {
+      "name": "product_plants.plant -> plants.plant",
+      "child_entity": "product_plants",
+      "child_cols": [
+        "plant"
+      ],
+      "parent_entity": "plants",
+      "parent_cols": [
+        "plant"
+      ],
+      "stats": {
+        "child_total_rows": 3036,
+        "child_complete_fk_rows": 3036,
+        "child_null_fk_rows": 0,
+        "parent_distinct_keys": 44,
+        "child_distinct_fk_keys": 44,
+        "matched_distinct_keys": 44,
+        "orphan_distinct_keys": 0,
+        "matched_child_rows": 3036,
+        "orphan_child_rows": 0,
+        "match_rate_on_complete_rows": 1.0,
+        "parent_key_coverage": 1.0,
+        "avg_children_per_parent": 69.0,
+        "max_children_per_parent": 69
+      }
+    },
+    {
+      "name": "product_storage_locations.(product,plant) -> product_plants.(product,plant)",
+      "child_entity": "product_storage_locations",
+      "child_cols": [
+        "product",
+        "plant"
+      ],
+      "parent_entity": "product_plants",
+      "parent_cols": [
+        "product",
+        "plant"
+      ],
+      "stats": {
+        "child_total_rows": 16723,
+        "child_complete_fk_rows": 16723,
+        "child_null_fk_rows": 0,
+        "parent_distinct_keys": 3036,
+        "child_distinct_fk_keys": 3021,
+        "matched_distinct_keys": 3021,
+        "orphan_distinct_keys": 0,
+        "matched_child_rows": 16723,
+        "orphan_child_rows": 0,
+        "match_rate_on_complete_rows": 1.0,
+        "parent_key_coverage": 0.9950592885375494,
+        "avg_children_per_parent": 5.535584243627937,
+        "max_children_per_parent": 20
+      }
+    }
+  ],
+  "normalized_fk_validation": [
+    {
+      "name": "outbound_delivery_items.(referenceSdDocument,referenceSdDocumentItem[norm]) -> sales_order_items.(salesOrder,salesOrderItem[norm])",
+      "child_entity": "outbound_delivery_items",
+      "child_cols": [
+        "referenceSdDocument",
+        "referenceSdDocumentItem"
+      ],
+      "parent_entity": "sales_order_items",
+      "parent_cols": [
+        "salesOrder",
+        "salesOrderItem"
+      ],
+      "stats": {
+        "child_total_rows": 137,
+        "child_complete_fk_rows": 137,
+        "child_null_fk_rows": 0,
+        "parent_distinct_keys": 167,
+        "child_distinct_fk_keys": 137,
+        "matched_distinct_keys": 137,
+        "orphan_distinct_keys": 0,
+        "matched_child_rows": 137,
+        "orphan_child_rows": 0,
+        "match_rate_on_complete_rows": 1.0,
+        "parent_key_coverage": 0.8203592814371258,
+        "avg_children_per_parent": 1.0,
+        "max_children_per_parent": 1
+      }
+    },
+    {
+      "name": "billing_document_items.(referenceSdDocument,referenceSdDocumentItem[norm]) -> outbound_delivery_items.(deliveryDocument,deliveryDocumentItem[norm])",
+      "child_entity": "billing_document_items",
+      "child_cols": [
+        "referenceSdDocument",
+        "referenceSdDocumentItem"
+      ],
+      "parent_entity": "outbound_delivery_items",
+      "parent_cols": [
+        "deliveryDocument",
+        "deliveryDocumentItem"
+      ],
+      "stats": {
+        "child_total_rows": 245,
+        "child_complete_fk_rows": 245,
+        "child_null_fk_rows": 0,
+        "parent_distinct_keys": 137,
+        "child_distinct_fk_keys": 124,
+        "matched_distinct_keys": 124,
+        "orphan_distinct_keys": 0,
+        "matched_child_rows": 245,
+        "orphan_child_rows": 0,
+        "match_rate_on_complete_rows": 1.0,
+        "parent_key_coverage": 0.9051094890510949,
+        "avg_children_per_parent": 1.9758064516129032,
+        "max_children_per_parent": 2
+      }
+    }
+  ],
+  "flow_metrics": {
+    "orders_total": 100,
+    "orders_with_delivery": 86,
+    "orders_without_delivery": 14,
+    "deliveries_total": 86,
+    "deliveries_with_billing": 83,
+    "deliveries_without_billing": 3,
+    "billings_total": 163,
+    "billings_with_journal_ref": 123,
+    "billings_without_journal_ref": 40,
+    "billing_accounting_docs_total": 163,
+    "billing_accounting_docs_with_payment": 120,
+    "billing_accounting_docs_without_payment": 43,
+    "billing_accounting_docs_with_journal_acc": 123,
+    "billing_accounting_docs_without_journal_acc": 40,
+    "order_item_total": 167,
+    "delivery_item_total": 137,
+    "billing_item_total": 245
+  },
+  "sample_traces": [
+    {
+      "salesOrder": "740509",
+      "salesOrderItem": "10",
+      "deliveries": [
+        "80738040"
+      ],
+      "deliveryItems": [
+        "000010"
+      ],
+      "billingDocuments": [
+        "90504204",
+        "91150217"
+      ],
+      "accountingDocuments": [
+        "9400000205",
+        "9400635988"
+      ],
+      "payments": [
+        "9400000205",
+        "9400635988"
+      ],
+      "journals": [
+        "9400000205",
+        "9400635988"
+      ]
+    },
+    {
+      "salesOrder": "740510",
+      "salesOrderItem": "10",
+      "deliveries": [
+        "80738041"
+      ],
+      "deliveryItems": [
+        "000010"
+      ],
+      "billingDocuments": [
+        "90504206",
+        "91150216"
+      ],
+      "accountingDocuments": [
+        "9400000206",
+        "9400635987"
+      ],
+      "payments": [
+        "9400000206",
+        "9400635987"
+      ],
+      "journals": [
+        "9400000206",
+        "9400635987"
+      ]
+    },
+    {
+      "salesOrder": "740511",
+      "salesOrderItem": "10",
+      "deliveries": [
+        "80738042"
+      ],
+      "deliveryItems": [
+        "000010"
+      ],
+      "billingDocuments": [
+        "90504207",
+        "91150215"
+      ],
+      "accountingDocuments": [
+        "9400000208",
+        "9400635986"
+      ],
+      "payments": [
+        "9400000208",
+        "9400635986"
+      ],
+      "journals": [
+        "9400000208",
+        "9400635986"
+      ]
+    }
+  ]
+}

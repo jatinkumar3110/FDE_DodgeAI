@@ -1,0 +1,4836 @@
+{
+  "root": "sap-order-to-cash-dataset/sap-o2c-data",
+  "entities": {
+    "billing_document_cancellations": {
+      "entity": "billing_document_cancellations",
+      "files": [
+        "sap-order-to-cash-dataset/sap-o2c-data/billing_document_cancellations/part-20251119-133433-51.jsonl"
+      ],
+      "row_count": 80,
+      "fields": {
+        "billingDocument": {
+          "type": "string",
+          "null_ratio": 0.0,
+          "non_null": 80,
+          "distinct_count": 80,
+          "examples": [
+            "90504274",
+            "90504242",
+            "90504239"
+          ],
+          "types_breakdown": {
+            "string": 80
+          }
+        },
+        "billingDocumentType": {
+          "type": "string",
+          "null_ratio": 0.0,
+          "non_null": 80,
+          "distinct_count": 1,
+          "examples": [
+            "F2",
+            "F2",
+            "F2"
+          ],
+          "types_breakdown": {
+            "string": 80
+          }
+        },
+        "creationDate": {
+          "type": "datetime",
+          "null_ratio": 0.0,
+          "non_null": 80,
+          "distinct_count": 2,
+          "examples": [
+            "2025-04-03T00:00:00.000Z",
+            "2025-04-03T00:00:00.000Z",
+            "2025-04-03T00:00:00.000Z"
+          ],
+          "types_breakdown": {
+            "datetime": 80
+          }
+        },
+        "creationTime": {
+          "type": "object",
+          "null_ratio": 0.0,
+          "non_null": 80,
+          "distinct_count": 0,
+          "examples": [
+            {
+              "hours": 11,
+              "minutes": 31,
+              "seconds": 13
+            },
+            {
+              "hours": 11,
+              "minutes": 31,
+              "seconds": 13
+            },
+            {
+              "hours": 11,
+              "minutes": 31,
+              "seconds": 13
+            }
+          ],
+          "types_breakdown": {
+            "object": 80
+          }
+        },
+        "lastChangeDateTime": {
+          "type": "datetime",
+          "null_ratio": 0.0,
+          "non_null": 80,
+          "distinct_count": 80,
+          "examples": [
+            "2025-07-24T11:42:30.485Z",
+            "2025-07-24T11:42:32.739Z",
+            "2025-07-24T11:42:32.921Z"
+          ],
+          "types_breakdown": {
+            "datetime": 80
+          }
+        },
+        "billingDocumentDate": {
+          "type": "datetime",
+          "null_ratio": 0.0,
+          "non_null": 80,
+          "distinct_count": 2,
+          "examples": [
+            "2025-04-02T00:00:00.000Z",
+            "2025-04-02T00:00:00.000Z",
+            "2025-04-02T00:00:00.000Z"
+          ],
+          "types_breakdown": {
+            "datetime": 80
+          }
+        },
+        "billingDocumentIsCancelled": {
+          "type": "bool",
+          "null_ratio": 0.0,
+          "non_null": 80,
+          "distinct_count": 1,
+          "examples": [
+            true,
+            true,
+            true
+          ],
+          "types_breakdown": {
+            "bool": 80
+          }
+        },
+        "cancelledBillingDocument": {
+          "type": "string",
+          "null_ratio": 0.0,
+          "non_null": 80,
+          "distinct_count": 1,
+          "examples": [
+            "",
+            "",
+            ""
+          ],
+          "types_breakdown": {
+            "string": 80
+          }
+        },
+        "totalNetAmount": {
+          "type": "string",
+          "null_ratio": 0.0,
+          "non_null": 80,
+          "distinct_count": 46,
+          "examples": [
+            "253.39",
+            "151.69",
+            "253.39"
+          ],
+          "types_breakdown": {
+            "string": 80
+          }
+        },
+        "transactionCurrency": {
+          "type": "string",
+          "null_ratio": 0.0,
+          "non_null": 80,
+          "distinct_count": 1,
+          "examples": [
+            "INR",
+            "INR",
+            "INR"
+          ],
+          "types_breakdown": {
+            "string": 80
+          }
+        },
+        "companyCode": {
+          "type": "string",
+          "null_ratio": 0.0,
+          "non_null": 80,
+          "distinct_count": 1,
+          "examples": [
+            "ABCD",
+            "ABCD",
+            "ABCD"
+          ],
+          "types_breakdown": {
+            "string": 80
+          }
+        },
+        "fiscalYear": {
+          "type": "string",
+          "null_ratio": 0.0,
+          "non_null": 80,
+          "distinct_count": 1,
+          "examples": [
+            "2025",
+            "2025",
+            "2025"
+          ],
+          "types_breakdown": {
+            "string": 80
+          }
+        },
+        "accountingDocument": {
+          "type": "string",
+          "null_ratio": 0.0,
+          "non_null": 80,
+          "distinct_count": 80,
+          "examples": [
+            "9400000275",
+            "9400000243",
+            "9400000240"
+          ],
+          "types_breakdown": {
+            "string": 80
+          }
+        },
+        "soldToParty": {
+          "type": "string",
+          "null_ratio": 0.0,
+          "non_null": 80,
+          "distinct_count": 4,
+          "examples": [
+            "320000083",
+            "320000083",
+            "320000083"
+          ],
+          "types_breakdown": {
+            "string": 80
+          }
+        }
+      },
+      "pk_candidates": [
+        "billingDocument",
+        "lastChangeDateTime",
+        "accountingDocument"
+      ],
+      "composite_pk_candidates": []
+    },
+    "billing_document_headers": {
+      "entity": "billing_document_headers",
+      "files": [
+        "sap-order-to-cash-dataset/sap-o2c-data/billing_document_headers/part-20251119-133433-228.jsonl",
+        "sap-order-to-cash-dataset/sap-o2c-data/billing_document_headers/part-20251119-133433-936.jsonl"
+      ],
+      "row_count": 163,
+      "fields": {
+        "billingDocument": {
+          "type": "string",
+          "null_ratio": 0.0,
+          "non_null": 163,
+          "distinct_count": 163,
+          "examples": [
+            "90504248",
+            "90628265",
+            "90628266"
+          ],
+          "types_breakdown": {
+            "string": 163
+          }
+        },
+        "billingDocumentType": {
+          "type": "string",
+          "null_ratio": 0.0,
+          "non_null": 163,
+          "distinct_count": 2,
+          "examples": [
+            "F2",
+            "F2",
+            "F2"
+          ],
+          "types_breakdown": {
+            "string": 163
+          }
+        },
+        "creationDate": {
+          "type": "datetime",
+          "null_ratio": 0.0,
+          "non_null": 163,
+          "distinct_count": 4,
+          "examples": [
+            "2025-04-03T00:00:00.000Z",
+            "2025-05-09T00:00:00.000Z",
+            "2025-05-09T00:00:00.000Z"
+          ],
+          "types_breakdown": {
+            "datetime": 163
+          }
+        },
+        "creationTime": {
+          "type": "object",
+          "null_ratio": 0.0,
+          "non_null": 163,
+          "distinct_count": 0,
+          "examples": [
+            {
+              "hours": 11,
+              "minutes": 31,
+              "seconds": 13
+            },
+            {
+              "hours": 7,
+              "minutes": 21,
+              "seconds": 19
+            },
+            {
+              "hours": 7,
+              "minutes": 21,
+              "seconds": 19
+            }
+          ],
+          "types_breakdown": {
+            "object": 163
+          }
+        },
+        "lastChangeDateTime": {
+          "type": "datetime",
+          "null_ratio": 0.0,
+          "non_null": 163,
+          "distinct_count": 84,
+          "examples": [
+            "2025-04-03T11:31:37.331Z",
+            "2025-05-09T07:21:26.332Z",
+            "2025-05-09T07:21:26.695Z"
+          ],
+          "types_breakdown": {
+            "datetime": 163
+          }
+        },
+        "billingDocumentDate": {
+          "type": "datetime",
+          "null_ratio": 0.0,
+          "non_null": 163,
+          "distinct_count": 3,
+          "examples": [
+            "2025-04-02T00:00:00.000Z",
+            "2025-04-30T00:00:00.000Z",
+            "2025-04-30T00:00:00.000Z"
+          ],
+          "types_breakdown": {
+            "datetime": 163
+          }
+        },
+        "billingDocumentIsCancelled": {
+          "type": "bool",
+          "null_ratio": 0.0,
+          "non_null": 163,
+          "distinct_count": 2,
+          "examples": [
+            false,
+            false,
+            false
+          ],
+          "types_breakdown": {
+            "bool": 163
+          }
+        },
+        "cancelledBillingDocument": {
+          "type": "string",
+          "null_ratio": 0.0,
+          "non_null": 163,
+          "distinct_count": 81,
+          "examples": [
+            "",
+            "",
+            ""
+          ],
+          "types_breakdown": {
+            "string": 163
+          }
+        },
+        "totalNetAmount": {
+          "type": "string",
+          "null_ratio": 0.0,
+          "non_null": 163,
+          "distinct_count": 47,
+          "examples": [
+            "216.1",
+            "245.9",
+            "287.9"
+          ],
+          "types_breakdown": {
+            "string": 163
+          }
+        },
+        "transactionCurrency": {
+          "type": "string",
+          "null_ratio": 0.0,
+          "non_null": 163,
+          "distinct_count": 1,
+          "examples": [
+            "INR",
+            "INR",
+            "INR"
+          ],
+          "types_breakdown": {
+            "string": 163
+          }
+        },
+        "companyCode": {
+          "type": "string",
+          "null_ratio": 0.0,
+          "non_null": 163,
+          "distinct_count": 1,
+          "examples": [
+            "ABCD",
+            "ABCD",
+            "ABCD"
+          ],
+          "types_breakdown": {
+            "string": 163
+          }
+        },
+        "fiscalYear": {
+          "type": "string",
+          "null_ratio": 0.0,
+          "non_null": 163,
+          "distinct_count": 1,
+          "examples": [
+            "2025",
+            "2025",
+            "2025"
+          ],
+          "types_breakdown": {
+            "string": 163
+          }
+        },
+        "accountingDocument": {
+          "type": "string",
+          "null_ratio": 0.0,
+          "non_null": 163,
+          "distinct_count": 163,
+          "examples": [
+            "9400000249",
+            "9400123662",
+            "9400123663"
+          ],
+          "types_breakdown": {
+            "string": 163
+          }
+        },
+        "soldToParty": {
+          "type": "string",
+          "null_ratio": 0.0,
+          "non_null": 163,
+          "distinct_count": 4,
+          "examples": [
+            "320000083",
+            "320000082",
+            "320000082"
+          ],
+          "types_breakdown": {
+            "string": 163
+          }
+        }
+      },
+      "pk_candidates": [
+        "billingDocument",
+        "accountingDocument"
+      ],
+      "composite_pk_candidates": []
+    },
+    "billing_document_items": {
+      "entity": "billing_document_items",
+      "files": [
+        "sap-order-to-cash-dataset/sap-o2c-data/billing_document_items/part-20251119-133432-233.jsonl",
+        "sap-order-to-cash-dataset/sap-o2c-data/billing_document_items/part-20251119-133432-978.jsonl"
+      ],
+      "row_count": 245,
+      "fields": {
+        "billingDocument": {
+          "type": "string",
+          "null_ratio": 0.0,
+          "non_null": 245,
+          "distinct_count": 163,
+          "examples": [
+            "90504298",
+            "90678703",
+            "90678698"
+          ],
+          "types_breakdown": {
+            "string": 245
+          }
+        },
+        "billingDocumentItem": {
+          "type": "string",
+          "null_ratio": 0.0,
+          "non_null": 245,
+          "distinct_count": 12,
+          "examples": [
+            "10",
+            "10",
+            "10"
+          ],
+          "types_breakdown": {
+            "string": 245
+          }
+        },
+        "material": {
+          "type": "string",
+          "null_ratio": 0.0,
+          "non_null": 245,
+          "distinct_count": 55,
+          "examples": [
+            "B8907367041603",
+            "B8907367032571",
+            "B8907367022152"
+          ],
+          "types_breakdown": {
+            "string": 245
+          }
+        },
+        "billingQuantity": {
+          "type": "string",
+          "null_ratio": 0.0,
+          "non_null": 245,
+          "distinct_count": 2,
+          "examples": [
+            "1",
+            "1",
+            "1"
+          ],
+          "types_breakdown": {
+            "string": 245
+          }
+        },
+        "billingQuantityUnit": {
+          "type": "string",
+          "null_ratio": 0.0,
+          "non_null": 245,
+          "distinct_count": 1,
+          "examples": [
+            "PC",
+            "PC",
+            "PC"
+          ],
+          "types_breakdown": {
+            "string": 245
+          }
+        },
+        "netAmount": {
+          "type": "string",
+          "null_ratio": 0.0,
+          "non_null": 245,
+          "distinct_count": 53,
+          "examples": [
+            "533.05",
+            "305.9",
+            "382.9"
+          ],
+          "types_breakdown": {
+            "string": 245
+          }
+        },
+        "transactionCurrency": {
+          "type": "string",
+          "null_ratio": 0.0,
+          "non_null": 245,
+          "distinct_count": 1,
+          "examples": [
+            "INR",
+            "INR",
+            "INR"
+          ],
+          "types_breakdown": {
+            "string": 245
+          }
+        },
+        "referenceSdDocument": {
+          "type": "string",
+          "null_ratio": 0.0,
+          "non_null": 245,
+          "distinct_count": 83,
+          "examples": [
+            "80738109",
+            "80754606",
+            "80754601"
+          ],
+          "types_breakdown": {
+            "string": 245
+          }
+        },
+        "referenceSdDocumentItem": {
+          "type": "string",
+          "null_ratio": 0.0,
+          "non_null": 245,
+          "distinct_count": 12,
+          "examples": [
+            "10",
+            "10",
+            "10"
+          ],
+          "types_breakdown": {
+            "string": 245
+          }
+        }
+      },
+      "pk_candidates": [],
+      "composite_pk_candidates": [
+        [
+          "billingDocument",
+          "billingDocumentItem"
+        ],
+        [
+          "billingDocument",
+          "referenceSdDocumentItem"
+        ]
+      ]
+    },
+    "business_partner_addresses": {
+      "entity": "business_partner_addresses",
+      "files": [
+        "sap-order-to-cash-dataset/sap-o2c-data/business_partner_addresses/part-20251119-133436-580.jsonl"
+      ],
+      "row_count": 8,
+      "fields": {
+        "businessPartner": {
+          "type": "string",
+          "null_ratio": 0.0,
+          "non_null": 8,
+          "distinct_count": 8,
+          "examples": [
+            "310000108",
+            "310000109",
+            "320000082"
+          ],
+          "types_breakdown": {
+            "string": 8
+          }
+        },
+        "addressId": {
+          "type": "string",
+          "null_ratio": 0.0,
+          "non_null": 8,
+          "distinct_count": 8,
+          "examples": [
+            "4605",
+            "4607",
+            "9526"
+          ],
+          "types_breakdown": {
+            "string": 8
+          }
+        },
+        "validityStartDate": {
+          "type": "datetime",
+          "null_ratio": 0.0,
+          "non_null": 8,
+          "distinct_count": 2,
+          "examples": [
+            "2024-04-16T00:00:00.000Z",
+            "2024-04-16T00:00:00.000Z",
+            "2024-11-20T00:00:00.000Z"
+          ],
+          "types_breakdown": {
+            "datetime": 8
+          }
+        },
+        "validityEndDate": {
+          "type": "datetime",
+          "null_ratio": 0.0,
+          "non_null": 8,
+          "distinct_count": 1,
+          "examples": [
+            "9999-12-31T23:59:59.000Z",
+            "9999-12-31T23:59:59.000Z",
+            "9999-12-31T23:59:59.000Z"
+          ],
+          "types_breakdown": {
+            "datetime": 8
+          }
+        },
+        "addressUuid": {
+          "type": "string",
+          "null_ratio": 0.0,
+          "non_null": 8,
+          "distinct_count": 8,
+          "examples": [
+            "af79c9a3-05bf-1ede-bef9-0812e7757c0e",
+            "af79c9a3-05bf-1ede-bef9-0812e7773c0e",
+            "f5c943a9-5d10-1eef-a9e2-b69c310f3c5c"
+          ],
+          "types_breakdown": {
+            "string": 8
+          }
+        },
+        "addressTimeZone": {
+          "type": "string",
+          "null_ratio": 0.0,
+          "non_null": 8,
+          "distinct_count": 1,
+          "examples": [
+            "INDIA",
+            "INDIA",
+            "INDIA"
+          ],
+          "types_breakdown": {
+            "string": 8
+          }
+        },
+        "cityName": {
+          "type": "string",
+          "null_ratio": 0.0,
+          "non_null": 8,
+          "distinct_count": 3,
+          "examples": [
+            "Lake Christopher",
+            "",
+            ""
+          ],
+          "types_breakdown": {
+            "string": 8
+          }
+        },
+        "country": {
+          "type": "string",
+          "null_ratio": 0.0,
+          "non_null": 8,
+          "distinct_count": 1,
+          "examples": [
+            "IN",
+            "IN",
+            "IN"
+          ],
+          "types_breakdown": {
+            "string": 8
+          }
+        },
+        "poBox": {
+          "type": "string",
+          "null_ratio": 0.0,
+          "non_null": 8,
+          "distinct_count": 1,
+          "examples": [
+            "",
+            "",
+            ""
+          ],
+          "types_breakdown": {
+            "string": 8
+          }
+        },
+        "poBoxDeviatingCityName": {
+          "type": "string",
+          "null_ratio": 0.0,
+          "non_null": 8,
+          "distinct_count": 1,
+          "examples": [
+            "",
+            "",
+            ""
+          ],
+          "types_breakdown": {
+            "string": 8
+          }
+        },
+        "poBoxDeviatingCountry": {
+          "type": "string",
+          "null_ratio": 0.0,
+          "non_null": 8,
+          "distinct_count": 1,
+          "examples": [
+            "",
+            "",
+            ""
+          ],
+          "types_breakdown": {
+            "string": 8
+          }
+        },
+        "poBoxDeviatingRegion": {
+          "type": "string",
+          "null_ratio": 0.0,
+          "non_null": 8,
+          "distinct_count": 1,
+          "examples": [
+            "",
+            "",
+            ""
+          ],
+          "types_breakdown": {
+            "string": 8
+          }
+        },
+        "poBoxIsWithoutNumber": {
+          "type": "bool",
+          "null_ratio": 0.0,
+          "non_null": 8,
+          "distinct_count": 1,
+          "examples": [
+            false,
+            false,
+            false
+          ],
+          "types_breakdown": {
+            "bool": 8
+          }
+        },
+        "poBoxLobbyName": {
+          "type": "string",
+          "null_ratio": 0.0,
+          "non_null": 8,
+          "distinct_count": 1,
+          "examples": [
+            "",
+            "",
+            ""
+          ],
+          "types_breakdown": {
+            "string": 8
+          }
+        },
+        "poBoxPostalCode": {
+          "type": "string",
+          "null_ratio": 0.0,
+          "non_null": 8,
+          "distinct_count": 1,
+          "examples": [
+            "",
+            "",
+            ""
+          ],
+          "types_breakdown": {
+            "string": 8
+          }
+        },
+        "postalCode": {
+          "type": "string",
+          "null_ratio": 0.0,
+          "non_null": 8,
+          "distinct_count": 4,
+          "examples": [
+            "18589",
+            "67176",
+            ""
+          ],
+          "types_breakdown": {
+            "string": 8
+          }
+        },
+        "region": {
+          "type": "string",
+          "null_ratio": 0.0,
+          "non_null": 8,
+          "distinct_count": 7,
+          "examples": [
+            "TS",
+            "RJ",
+            "RJ"
+          ],
+          "types_breakdown": {
+            "string": 8
+          }
+        },
+        "streetName": {
+          "type": "string",
+          "null_ratio": 0.0,
+          "non_null": 8,
+          "distinct_count": 3,
+          "examples": [
+            "0171 Rebecca Glen",
+            "174 Rebekah Mission Apt. 044",
+            ""
+          ],
+          "types_breakdown": {
+            "string": 8
+          }
+        },
+        "taxJurisdiction": {
+          "type": "string",
+          "null_ratio": 0.0,
+          "non_null": 8,
+          "distinct_count": 1,
+          "examples": [
+            "",
+            "",
+            ""
+          ],
+          "types_breakdown": {
+            "string": 8
+          }
+        },
+        "transportZone": {
+          "type": "string",
+          "null_ratio": 0.0,
+          "non_null": 8,
+          "distinct_count": 1,
+          "examples": [
+            "",
+            "",
+            ""
+          ],
+          "types_breakdown": {
+            "string": 8
+          }
+        }
+      },
+      "pk_candidates": [
+        "businessPartner",
+        "addressId",
+        "addressUuid"
+      ],
+      "composite_pk_candidates": []
+    },
+    "business_partners": {
+      "entity": "business_partners",
+      "files": [
+        "sap-order-to-cash-dataset/sap-o2c-data/business_partners/part-20251119-133435-168.jsonl"
+      ],
+      "row_count": 8,
+      "fields": {
+        "businessPartner": {
+          "type": "string",
+          "null_ratio": 0.0,
+          "non_null": 8,
+          "distinct_count": 8,
+          "examples": [
+            "310000108",
+            "310000109",
+            "320000082"
+          ],
+          "types_breakdown": {
+            "string": 8
+          }
+        },
+        "customer": {
+          "type": "string",
+          "null_ratio": 0.0,
+          "non_null": 8,
+          "distinct_count": 8,
+          "examples": [
+            "310000108",
+            "310000109",
+            "320000082"
+          ],
+          "types_breakdown": {
+            "string": 8
+          }
+        },
+        "businessPartnerCategory": {
+          "type": "string",
+          "null_ratio": 0.0,
+          "non_null": 8,
+          "distinct_count": 1,
+          "examples": [
+            "2",
+            "2",
+            "2"
+          ],
+          "types_breakdown": {
+            "string": 8
+          }
+        },
+        "businessPartnerFullName": {
+          "type": "string",
+          "null_ratio": 0.0,
+          "non_null": 8,
+          "distinct_count": 8,
+          "examples": [
+            "Cardenas, Parker and Avila",
+            "Bradley-Kelley",
+            "Nguyen-Davis"
+          ],
+          "types_breakdown": {
+            "string": 8
+          }
+        },
+        "businessPartnerGrouping": {
+          "type": "string",
+          "null_ratio": 0.0,
+          "non_null": 8,
+          "distinct_count": 2,
+          "examples": [
+            "Y101",
+            "Y101",
+            "Y102"
+          ],
+          "types_breakdown": {
+            "string": 8
+          }
+        },
+        "businessPartnerName": {
+          "type": "string",
+          "null_ratio": 0.0,
+          "non_null": 8,
+          "distinct_count": 8,
+          "examples": [
+            "Cardenas, Parker and Avila",
+            "Bradley-Kelley",
+            "Nguyen-Davis"
+          ],
+          "types_breakdown": {
+            "string": 8
+          }
+        },
+        "correspondenceLanguage": {
+          "type": "string",
+          "null_ratio": 0.0,
+          "non_null": 8,
+          "distinct_count": 1,
+          "examples": [
+            "",
+            "",
+            ""
+          ],
+          "types_breakdown": {
+            "string": 8
+          }
+        },
+        "createdByUser": {
+          "type": "string",
+          "null_ratio": 0.0,
+          "non_null": 8,
+          "distinct_count": 2,
+          "examples": [
+            "USER750",
+            "USER750",
+            "USER108"
+          ],
+          "types_breakdown": {
+            "string": 8
+          }
+        },
+        "creationDate": {
+          "type": "datetime",
+          "null_ratio": 0.0,
+          "non_null": 8,
+          "distinct_count": 2,
+          "examples": [
+            "2024-04-16T00:00:00.000Z",
+            "2024-04-16T00:00:00.000Z",
+            "2024-11-20T00:00:00.000Z"
+          ],
+          "types_breakdown": {
+            "datetime": 8
+          }
+        },
+        "creationTime": {
+          "type": "object",
+          "null_ratio": 0.0,
+          "non_null": 8,
+          "distinct_count": 0,
+          "examples": [
+            {
+              "hours": 13,
+              "minutes": 36,
+              "seconds": 43
+            },
+            {
+              "hours": 13,
+              "minutes": 36,
+              "seconds": 43
+            },
+            {
+              "hours": 13,
+              "minutes": 32,
+              "seconds": 1
+            }
+          ],
+          "types_breakdown": {
+            "object": 8
+          }
+        },
+        "firstName": {
+          "type": "string",
+          "null_ratio": 0.0,
+          "non_null": 8,
+          "distinct_count": 1,
+          "examples": [
+            "",
+            "",
+            ""
+          ],
+          "types_breakdown": {
+            "string": 8
+          }
+        },
+        "formOfAddress": {
+          "type": "string",
+          "null_ratio": 0.0,
+          "non_null": 8,
+          "distinct_count": 1,
+          "examples": [
+            "0003",
+            "0003",
+            "0003"
+          ],
+          "types_breakdown": {
+            "string": 8
+          }
+        },
+        "industry": {
+          "type": "string",
+          "null_ratio": 0.0,
+          "non_null": 8,
+          "distinct_count": 1,
+          "examples": [
+            "",
+            "",
+            ""
+          ],
+          "types_breakdown": {
+            "string": 8
+          }
+        },
+        "lastChangeDate": {
+          "type": "datetime",
+          "null_ratio": 0.0,
+          "non_null": 8,
+          "distinct_count": 4,
+          "examples": [
+            "2025-06-27T00:00:00.000Z",
+            "2025-11-06T00:00:00.000Z",
+            "2025-09-10T00:00:00.000Z"
+          ],
+          "types_breakdown": {
+            "datetime": 8
+          }
+        },
+        "lastName": {
+          "type": "string",
+          "null_ratio": 0.0,
+          "non_null": 8,
+          "distinct_count": 1,
+          "examples": [
+            "",
+            "",
+            ""
+          ],
+          "types_breakdown": {
+            "string": 8
+          }
+        },
+        "organizationBpName1": {
+          "type": "string",
+          "null_ratio": 0.0,
+          "non_null": 8,
+          "distinct_count": 8,
+          "examples": [
+            "Cardenas, Parker and Avila",
+            "Bradley-Kelley",
+            "Nguyen-Davis"
+          ],
+          "types_breakdown": {
+            "string": 8
+          }
+        },
+        "organizationBpName2": {
+          "type": "string",
+          "null_ratio": 0.0,
+          "non_null": 8,
+          "distinct_count": 2,
+          "examples": [
+            "",
+            "",
+            ""
+          ],
+          "types_breakdown": {
+            "string": 8
+          }
+        },
+        "businessPartnerIsBlocked": {
+          "type": "bool",
+          "null_ratio": 0.0,
+          "non_null": 8,
+          "distinct_count": 2,
+          "examples": [
+            false,
+            false,
+            true
+          ],
+          "types_breakdown": {
+            "bool": 8
+          }
+        },
+        "isMarkedForArchiving": {
+          "type": "bool",
+          "null_ratio": 0.0,
+          "non_null": 8,
+          "distinct_count": 2,
+          "examples": [
+            false,
+            false,
+            true
+          ],
+          "types_breakdown": {
+            "bool": 8
+          }
+        }
+      },
+      "pk_candidates": [
+        "businessPartner",
+        "customer",
+        "businessPartnerFullName",
+        "businessPartnerName",
+        "organizationBpName1"
+      ],
+      "composite_pk_candidates": []
+    },
+    "customer_company_assignments": {
+      "entity": "customer_company_assignments",
+      "files": [
+        "sap-order-to-cash-dataset/sap-o2c-data/customer_company_assignments/part-20251119-133436-59.jsonl"
+      ],
+      "row_count": 8,
+      "fields": {
+        "customer": {
+          "type": "string",
+          "null_ratio": 0.0,
+          "non_null": 8,
+          "distinct_count": 8,
+          "examples": [
+            "310000108",
+            "310000109",
+            "320000082"
+          ],
+          "types_breakdown": {
+            "string": 8
+          }
+        },
+        "companyCode": {
+          "type": "string",
+          "null_ratio": 0.0,
+          "non_null": 8,
+          "distinct_count": 1,
+          "examples": [
+            "ABCD",
+            "ABCD",
+            "ABCD"
+          ],
+          "types_breakdown": {
+            "string": 8
+          }
+        },
+        "accountingClerk": {
+          "type": "string",
+          "null_ratio": 0.0,
+          "non_null": 8,
+          "distinct_count": 1,
+          "examples": [
+            "",
+            "",
+            ""
+          ],
+          "types_breakdown": {
+            "string": 8
+          }
+        },
+        "accountingClerkFaxNumber": {
+          "type": "string",
+          "null_ratio": 0.0,
+          "non_null": 8,
+          "distinct_count": 1,
+          "examples": [
+            "",
+            "",
+            ""
+          ],
+          "types_breakdown": {
+            "string": 8
+          }
+        },
+        "accountingClerkInternetAddress": {
+          "type": "string",
+          "null_ratio": 0.0,
+          "non_null": 8,
+          "distinct_count": 1,
+          "examples": [
+            "",
+            "",
+            ""
+          ],
+          "types_breakdown": {
+            "string": 8
+          }
+        },
+        "accountingClerkPhoneNumber": {
+          "type": "string",
+          "null_ratio": 0.0,
+          "non_null": 8,
+          "distinct_count": 1,
+          "examples": [
+            "",
+            "",
+            ""
+          ],
+          "types_breakdown": {
+            "string": 8
+          }
+        },
+        "alternativePayerAccount": {
+          "type": "string",
+          "null_ratio": 0.0,
+          "non_null": 8,
+          "distinct_count": 1,
+          "examples": [
+            "",
+            "",
+            ""
+          ],
+          "types_breakdown": {
+            "string": 8
+          }
+        },
+        "paymentBlockingReason": {
+          "type": "string",
+          "null_ratio": 0.0,
+          "non_null": 8,
+          "distinct_count": 1,
+          "examples": [
+            "",
+            "",
+            ""
+          ],
+          "types_breakdown": {
+            "string": 8
+          }
+        },
+        "paymentMethodsList": {
+          "type": "string",
+          "null_ratio": 0.0,
+          "non_null": 8,
+          "distinct_count": 1,
+          "examples": [
+            "",
+            "",
+            ""
+          ],
+          "types_breakdown": {
+            "string": 8
+          }
+        },
+        "paymentTerms": {
+          "type": "string",
+          "null_ratio": 0.0,
+          "non_null": 8,
+          "distinct_count": 2,
+          "examples": [
+            "",
+            "",
+            ""
+          ],
+          "types_breakdown": {
+            "string": 8
+          }
+        },
+        "reconciliationAccount": {
+          "type": "string",
+          "null_ratio": 0.0,
+          "non_null": 8,
+          "distinct_count": 2,
+          "examples": [
+            "15500010",
+            "15500010",
+            "15500020"
+          ],
+          "types_breakdown": {
+            "string": 8
+          }
+        },
+        "deletionIndicator": {
+          "type": "bool",
+          "null_ratio": 0.0,
+          "non_null": 8,
+          "distinct_count": 2,
+          "examples": [
+            false,
+            false,
+            true
+          ],
+          "types_breakdown": {
+            "bool": 8
+          }
+        },
+        "customerAccountGroup": {
+          "type": "string",
+          "null_ratio": 0.0,
+          "non_null": 8,
+          "distinct_count": 2,
+          "examples": [
+            "Y101",
+            "Y101",
+            "Y102"
+          ],
+          "types_breakdown": {
+            "string": 8
+          }
+        }
+      },
+      "pk_candidates": [
+        "customer"
+      ],
+      "composite_pk_candidates": []
+    },
+    "customer_sales_area_assignments": {
+      "entity": "customer_sales_area_assignments",
+      "files": [
+        "sap-order-to-cash-dataset/sap-o2c-data/customer_sales_area_assignments/part-20251119-133437-884.jsonl"
+      ],
+      "row_count": 28,
+      "fields": {
+        "customer": {
+          "type": "string",
+          "null_ratio": 0.0,
+          "non_null": 28,
+          "distinct_count": 8,
+          "examples": [
+            "310000108",
+            "310000108",
+            "310000109"
+          ],
+          "types_breakdown": {
+            "string": 28
+          }
+        },
+        "salesOrganization": {
+          "type": "string",
+          "null_ratio": 0.0,
+          "non_null": 28,
+          "distinct_count": 1,
+          "examples": [
+            "ABCD",
+            "ABCD",
+            "ABCD"
+          ],
+          "types_breakdown": {
+            "string": 28
+          }
+        },
+        "distributionChannel": {
+          "type": "string",
+          "null_ratio": 0.0,
+          "non_null": 28,
+          "distinct_count": 5,
+          "examples": [
+            "05",
+            "RB",
+            "05"
+          ],
+          "types_breakdown": {
+            "string": 28
+          }
+        },
+        "division": {
+          "type": "string",
+          "null_ratio": 0.0,
+          "non_null": 28,
+          "distinct_count": 1,
+          "examples": [
+            "99",
+            "99",
+            "99"
+          ],
+          "types_breakdown": {
+            "string": 28
+          }
+        },
+        "billingIsBlockedForCustomer": {
+          "type": "string",
+          "null_ratio": 0.0,
+          "non_null": 28,
+          "distinct_count": 1,
+          "examples": [
+            "",
+            "",
+            ""
+          ],
+          "types_breakdown": {
+            "string": 28
+          }
+        },
+        "completeDeliveryIsDefined": {
+          "type": "bool",
+          "null_ratio": 0.0,
+          "non_null": 28,
+          "distinct_count": 1,
+          "examples": [
+            false,
+            false,
+            false
+          ],
+          "types_breakdown": {
+            "bool": 28
+          }
+        },
+        "creditControlArea": {
+          "type": "string",
+          "null_ratio": 0.0,
+          "non_null": 28,
+          "distinct_count": 1,
+          "examples": [
+            "",
+            "",
+            ""
+          ],
+          "types_breakdown": {
+            "string": 28
+          }
+        },
+        "currency": {
+          "type": "string",
+          "null_ratio": 0.0,
+          "non_null": 28,
+          "distinct_count": 1,
+          "examples": [
+            "INR",
+            "INR",
+            "INR"
+          ],
+          "types_breakdown": {
+            "string": 28
+          }
+        },
+        "customerPaymentTerms": {
+          "type": "string",
+          "null_ratio": 0.0,
+          "non_null": 28,
+          "distinct_count": 2,
+          "examples": [
+            "Z009",
+            "Z001",
+            "Z009"
+          ],
+          "types_breakdown": {
+            "string": 28
+          }
+        },
+        "deliveryPriority": {
+          "type": "string",
+          "null_ratio": 0.0,
+          "non_null": 28,
+          "distinct_count": 1,
+          "examples": [
+            "0",
+            "0",
+            "0"
+          ],
+          "types_breakdown": {
+            "string": 28
+          }
+        },
+        "incotermsClassification": {
+          "type": "string",
+          "null_ratio": 0.0,
+          "non_null": 28,
+          "distinct_count": 2,
+          "examples": [
+            "FOR",
+            "FOR",
+            "FOR"
+          ],
+          "types_breakdown": {
+            "string": 28
+          }
+        },
+        "incotermsLocation1": {
+          "type": "string",
+          "null_ratio": 0.0,
+          "non_null": 28,
+          "distinct_count": 4,
+          "examples": [
+            "Millerborough",
+            "Wellsborough",
+            "Millerborough"
+          ],
+          "types_breakdown": {
+            "string": 28
+          }
+        },
+        "salesGroup": {
+          "type": "string",
+          "null_ratio": 0.0,
+          "non_null": 28,
+          "distinct_count": 1,
+          "examples": [
+            "",
+            "",
+            ""
+          ],
+          "types_breakdown": {
+            "string": 28
+          }
+        },
+        "salesOffice": {
+          "type": "string",
+          "null_ratio": 0.0,
+          "non_null": 28,
+          "distinct_count": 1,
+          "examples": [
+            "",
+            "",
+            ""
+          ],
+          "types_breakdown": {
+            "string": 28
+          }
+        },
+        "shippingCondition": {
+          "type": "string",
+          "null_ratio": 0.0,
+          "non_null": 28,
+          "distinct_count": 2,
+          "examples": [
+            "01",
+            "01",
+            "01"
+          ],
+          "types_breakdown": {
+            "string": 28
+          }
+        },
+        "slsUnlmtdOvrdelivIsAllwd": {
+          "type": "bool",
+          "null_ratio": 0.0,
+          "non_null": 28,
+          "distinct_count": 1,
+          "examples": [
+            false,
+            false,
+            false
+          ],
+          "types_breakdown": {
+            "bool": 28
+          }
+        },
+        "supplyingPlant": {
+          "type": "string",
+          "null_ratio": 0.0,
+          "non_null": 28,
+          "distinct_count": 1,
+          "examples": [
+            "",
+            "",
+            ""
+          ],
+          "types_breakdown": {
+            "string": 28
+          }
+        },
+        "salesDistrict": {
+          "type": "string",
+          "null_ratio": 0.0,
+          "non_null": 28,
+          "distinct_count": 1,
+          "examples": [
+            "",
+            "",
+            ""
+          ],
+          "types_breakdown": {
+            "string": 28
+          }
+        },
+        "exchangeRateType": {
+          "type": "string",
+          "null_ratio": 0.0,
+          "non_null": 28,
+          "distinct_count": 2,
+          "examples": [
+            "M",
+            "",
+            "M"
+          ],
+          "types_breakdown": {
+            "string": 28
+          }
+        }
+      },
+      "pk_candidates": [],
+      "composite_pk_candidates": []
+    },
+    "journal_entry_items_accounts_receivable": {
+      "entity": "journal_entry_items_accounts_receivable",
+      "files": [
+        "sap-order-to-cash-dataset/sap-o2c-data/journal_entry_items_accounts_receivable/part-20251119-133433-74.jsonl",
+        "sap-order-to-cash-dataset/sap-o2c-data/journal_entry_items_accounts_receivable/part-20251119-133434-273.jsonl",
+        "sap-order-to-cash-dataset/sap-o2c-data/journal_entry_items_accounts_receivable/part-20251119-133434-581.jsonl",
+        "sap-order-to-cash-dataset/sap-o2c-data/journal_entry_items_accounts_receivable/part-20251119-133434-669.jsonl"
+      ],
+      "row_count": 123,
+      "fields": {
+        "companyCode": {
+          "type": "string",
+          "null_ratio": 0.0,
+          "non_null": 123,
+          "distinct_count": 1,
+          "examples": [
+            "ABCD",
+            "ABCD",
+            "ABCD"
+          ],
+          "types_breakdown": {
+            "string": 123
+          }
+        },
+        "fiscalYear": {
+          "type": "string",
+          "null_ratio": 0.0,
+          "non_null": 123,
+          "distinct_count": 1,
+          "examples": [
+            "2025",
+            "2025",
+            "2025"
+          ],
+          "types_breakdown": {
+            "string": 123
+          }
+        },
+        "accountingDocument": {
+          "type": "string",
+          "null_ratio": 0.0,
+          "non_null": 123,
+          "distinct_count": 123,
+          "examples": [
+            "9400000220",
+            "9400000226",
+            "9400000231"
+          ],
+          "types_breakdown": {
+            "string": 123
+          }
+        },
+        "glAccount": {
+          "type": "string",
+          "null_ratio": 0.0,
+          "non_null": 123,
+          "distinct_count": 1,
+          "examples": [
+            "15500020",
+            "15500020",
+            "15500020"
+          ],
+          "types_breakdown": {
+            "string": 123
+          }
+        },
+        "referenceDocument": {
+          "type": "string",
+          "null_ratio": 0.0,
+          "non_null": 123,
+          "distinct_count": 123,
+          "examples": [
+            "90504219",
+            "90504225",
+            "90504230"
+          ],
+          "types_breakdown": {
+            "string": 123
+          }
+        },
+        "costCenter": {
+          "type": "string",
+          "null_ratio": 0.0,
+          "non_null": 123,
+          "distinct_count": 1,
+          "examples": [
+            "",
+            "",
+            ""
+          ],
+          "types_breakdown": {
+            "string": 123
+          }
+        },
+        "profitCenter": {
+          "type": "string",
+          "null_ratio": 0.0,
+          "non_null": 123,
+          "distinct_count": 1,
+          "examples": [
+            "ABC001",
+            "ABC001",
+            "ABC001"
+          ],
+          "types_breakdown": {
+            "string": 123
+          }
+        },
+        "transactionCurrency": {
+          "type": "string",
+          "null_ratio": 0.0,
+          "non_null": 123,
+          "distinct_count": 1,
+          "examples": [
+            "INR",
+            "INR",
+            "INR"
+          ],
+          "types_breakdown": {
+            "string": 123
+          }
+        },
+        "amountInTransactionCurrency": {
+          "type": "string",
+          "null_ratio": 0.0,
+          "non_null": 123,
+          "distinct_count": 79,
+          "examples": [
+            "897.03",
+            "897",
+            "897.03"
+          ],
+          "types_breakdown": {
+            "string": 123
+          }
+        },
+        "companyCodeCurrency": {
+          "type": "string",
+          "null_ratio": 0.0,
+          "non_null": 123,
+          "distinct_count": 1,
+          "examples": [
+            "INR",
+            "INR",
+            "INR"
+          ],
+          "types_breakdown": {
+            "string": 123
+          }
+        },
+        "amountInCompanyCodeCurrency": {
+          "type": "string",
+          "null_ratio": 0.0,
+          "non_null": 123,
+          "distinct_count": 79,
+          "examples": [
+            "897.03",
+            "897",
+            "897.03"
+          ],
+          "types_breakdown": {
+            "string": 123
+          }
+        },
+        "postingDate": {
+          "type": "datetime",
+          "null_ratio": 0.0,
+          "non_null": 123,
+          "distinct_count": 3,
+          "examples": [
+            "2025-04-02T00:00:00.000Z",
+            "2025-04-02T00:00:00.000Z",
+            "2025-04-02T00:00:00.000Z"
+          ],
+          "types_breakdown": {
+            "datetime": 123
+          }
+        },
+        "documentDate": {
+          "type": "datetime",
+          "null_ratio": 0.0,
+          "non_null": 123,
+          "distinct_count": 3,
+          "examples": [
+            "2025-04-02T00:00:00.000Z",
+            "2025-04-02T00:00:00.000Z",
+            "2025-04-02T00:00:00.000Z"
+          ],
+          "types_breakdown": {
+            "datetime": 123
+          }
+        },
+        "accountingDocumentType": {
+          "type": "string",
+          "null_ratio": 0.0,
+          "non_null": 123,
+          "distinct_count": 1,
+          "examples": [
+            "RV",
+            "RV",
+            "RV"
+          ],
+          "types_breakdown": {
+            "string": 123
+          }
+        },
+        "accountingDocumentItem": {
+          "type": "string",
+          "null_ratio": 0.0,
+          "non_null": 123,
+          "distinct_count": 1,
+          "examples": [
+            "1",
+            "1",
+            "1"
+          ],
+          "types_breakdown": {
+            "string": 123
+          }
+        },
+        "assignmentReference": {
+          "type": "string",
+          "null_ratio": 0.0,
+          "non_null": 123,
+          "distinct_count": 1,
+          "examples": [
+            "",
+            "",
+            ""
+          ],
+          "types_breakdown": {
+            "string": 123
+          }
+        },
+        "lastChangeDateTime": {
+          "type": "datetime",
+          "null_ratio": 0.0,
+          "non_null": 123,
+          "distinct_count": 3,
+          "examples": [
+            "2025-07-24T11:43:59.000Z",
+            "2025-07-24T11:43:59.000Z",
+            "2025-07-24T11:43:59.000Z"
+          ],
+          "types_breakdown": {
+            "datetime": 123
+          }
+        },
+        "customer": {
+          "type": "string",
+          "null_ratio": 0.0,
+          "non_null": 123,
+          "distinct_count": 2,
+          "examples": [
+            "320000083",
+            "320000083",
+            "320000083"
+          ],
+          "types_breakdown": {
+            "string": 123
+          }
+        },
+        "financialAccountType": {
+          "type": "string",
+          "null_ratio": 0.0,
+          "non_null": 123,
+          "distinct_count": 1,
+          "examples": [
+            "D",
+            "D",
+            "D"
+          ],
+          "types_breakdown": {
+            "string": 123
+          }
+        },
+        "clearingDate": {
+          "type": "datetime",
+          "null_ratio": 0.024390243902439025,
+          "non_null": 120,
+          "distinct_count": 2,
+          "examples": [
+            "2025-04-02T00:00:00.000Z",
+            "2025-04-02T00:00:00.000Z",
+            "2025-04-02T00:00:00.000Z"
+          ],
+          "types_breakdown": {
+            "datetime": 120,
+            "null": 3
+          }
+        },
+        "clearingAccountingDocument": {
+          "type": "string",
+          "null_ratio": 0.0,
+          "non_null": 123,
+          "distinct_count": 77,
+          "examples": [
+            "9400635977",
+            "9400635973",
+            "9400635969"
+          ],
+          "types_breakdown": {
+            "string": 123
+          }
+        },
+        "clearingDocFiscalYear": {
+          "type": "string",
+          "null_ratio": 0.0,
+          "non_null": 123,
+          "distinct_count": 2,
+          "examples": [
+            "2025",
+            "2025",
+            "2025"
+          ],
+          "types_breakdown": {
+            "string": 123
+          }
+        }
+      },
+      "pk_candidates": [
+        "accountingDocument",
+        "referenceDocument"
+      ],
+      "composite_pk_candidates": []
+    },
+    "outbound_delivery_headers": {
+      "entity": "outbound_delivery_headers",
+      "files": [
+        "sap-order-to-cash-dataset/sap-o2c-data/outbound_delivery_headers/part-20251119-133431-414.jsonl"
+      ],
+      "row_count": 86,
+      "fields": {
+        "actualGoodsMovementDate": {
+          "type": "datetime",
+          "null_ratio": 0.9651162790697675,
+          "non_null": 3,
+          "distinct_count": 2,
+          "examples": [
+            "2025-04-29T00:00:00.000Z",
+            "2025-04-29T00:00:00.000Z",
+            "2025-04-02T00:00:00.000Z"
+          ],
+          "types_breakdown": {
+            "null": 83,
+            "datetime": 3
+          }
+        },
+        "actualGoodsMovementTime": {
+          "type": "object",
+          "null_ratio": 0.0,
+          "non_null": 86,
+          "distinct_count": 0,
+          "examples": [
+            {
+              "hours": 0,
+              "minutes": 0,
+              "seconds": 0
+            },
+            {
+              "hours": 0,
+              "minutes": 0,
+              "seconds": 0
+            },
+            {
+              "hours": 0,
+              "minutes": 0,
+              "seconds": 0
+            }
+          ],
+          "types_breakdown": {
+            "object": 86
+          }
+        },
+        "creationDate": {
+          "type": "datetime",
+          "null_ratio": 0.0,
+          "non_null": 86,
+          "distinct_count": 3,
+          "examples": [
+            "2025-03-31T00:00:00.000Z",
+            "2025-03-31T00:00:00.000Z",
+            "2025-03-31T00:00:00.000Z"
+          ],
+          "types_breakdown": {
+            "datetime": 86
+          }
+        },
+        "creationTime": {
+          "type": "object",
+          "null_ratio": 0.0,
+          "non_null": 86,
+          "distinct_count": 0,
+          "examples": [
+            {
+              "hours": 6,
+              "minutes": 49,
+              "seconds": 13
+            },
+            {
+              "hours": 6,
+              "minutes": 49,
+              "seconds": 16
+            },
+            {
+              "hours": 11,
+              "minutes": 19,
+              "seconds": 3
+            }
+          ],
+          "types_breakdown": {
+            "object": 86
+          }
+        },
+        "deliveryBlockReason": {
+          "type": "string",
+          "null_ratio": 0.0,
+          "non_null": 86,
+          "distinct_count": 1,
+          "examples": [
+            "",
+            "",
+            ""
+          ],
+          "types_breakdown": {
+            "string": 86
+          }
+        },
+        "deliveryDocument": {
+          "type": "string",
+          "null_ratio": 0.0,
+          "non_null": 86,
+          "distinct_count": 86,
+          "examples": [
+            "80737721",
+            "80737722",
+            "80737723"
+          ],
+          "types_breakdown": {
+            "string": 86
+          }
+        },
+        "hdrGeneralIncompletionStatus": {
+          "type": "string",
+          "null_ratio": 0.0,
+          "non_null": 86,
+          "distinct_count": 1,
+          "examples": [
+            "C",
+            "C",
+            "C"
+          ],
+          "types_breakdown": {
+            "string": 86
+          }
+        },
+        "headerBillingBlockReason": {
+          "type": "string",
+          "null_ratio": 0.0,
+          "non_null": 86,
+          "distinct_count": 1,
+          "examples": [
+            "",
+            "",
+            ""
+          ],
+          "types_breakdown": {
+            "string": 86
+          }
+        },
+        "lastChangeDate": {
+          "type": "datetime",
+          "null_ratio": 0.03488372093023256,
+          "non_null": 83,
+          "distinct_count": 3,
+          "examples": [
+            "2025-07-24T00:00:00.000Z",
+            "2025-07-24T00:00:00.000Z",
+            "2025-07-24T00:00:00.000Z"
+          ],
+          "types_breakdown": {
+            "null": 3,
+            "datetime": 83
+          }
+        },
+        "overallGoodsMovementStatus": {
+          "type": "string",
+          "null_ratio": 0.0,
+          "non_null": 86,
+          "distinct_count": 2,
+          "examples": [
+            "A",
+            "A",
+            "A"
+          ],
+          "types_breakdown": {
+            "string": 86
+          }
+        },
+        "overallPickingStatus": {
+          "type": "string",
+          "null_ratio": 0.0,
+          "non_null": 86,
+          "distinct_count": 1,
+          "examples": [
+            "C",
+            "C",
+            "C"
+          ],
+          "types_breakdown": {
+            "string": 86
+          }
+        },
+        "overallProofOfDeliveryStatus": {
+          "type": "string",
+          "null_ratio": 0.0,
+          "non_null": 86,
+          "distinct_count": 1,
+          "examples": [
+            "",
+            "",
+            ""
+          ],
+          "types_breakdown": {
+            "string": 86
+          }
+        },
+        "shippingPoint": {
+          "type": "string",
+          "null_ratio": 0.0,
+          "non_null": 86,
+          "distinct_count": 5,
+          "examples": [
+            "1920",
+            "1920",
+            "1920"
+          ],
+          "types_breakdown": {
+            "string": 86
+          }
+        }
+      },
+      "pk_candidates": [
+        "deliveryDocument"
+      ],
+      "composite_pk_candidates": []
+    },
+    "outbound_delivery_items": {
+      "entity": "outbound_delivery_items",
+      "files": [
+        "sap-order-to-cash-dataset/sap-o2c-data/outbound_delivery_items/part-20251119-133431-439.jsonl",
+        "sap-order-to-cash-dataset/sap-o2c-data/outbound_delivery_items/part-20251119-133431-626.jsonl"
+      ],
+      "row_count": 137,
+      "fields": {
+        "actualDeliveryQuantity": {
+          "type": "string",
+          "null_ratio": 0.0,
+          "non_null": 137,
+          "distinct_count": 11,
+          "examples": [
+            "1",
+            "1",
+            "1"
+          ],
+          "types_breakdown": {
+            "string": 137
+          }
+        },
+        "batch": {
+          "type": "string",
+          "null_ratio": 0.0,
+          "non_null": 137,
+          "distinct_count": 2,
+          "examples": [
+            "",
+            "ABCD",
+            "ABCD"
+          ],
+          "types_breakdown": {
+            "string": 137
+          }
+        },
+        "deliveryDocument": {
+          "type": "string",
+          "null_ratio": 0.0,
+          "non_null": 137,
+          "distinct_count": 86,
+          "examples": [
+            "80738076",
+            "80738076",
+            "80738076"
+          ],
+          "types_breakdown": {
+            "string": 137
+          }
+        },
+        "deliveryDocumentItem": {
+          "type": "string",
+          "null_ratio": 0.0,
+          "non_null": 137,
+          "distinct_count": 12,
+          "examples": [
+            "000010",
+            "000020",
+            "000030"
+          ],
+          "types_breakdown": {
+            "string": 137
+          }
+        },
+        "deliveryQuantityUnit": {
+          "type": "string",
+          "null_ratio": 0.0,
+          "non_null": 137,
+          "distinct_count": 1,
+          "examples": [
+            "PC",
+            "PC",
+            "PC"
+          ],
+          "types_breakdown": {
+            "string": 137
+          }
+        },
+        "itemBillingBlockReason": {
+          "type": "string",
+          "null_ratio": 0.0,
+          "non_null": 137,
+          "distinct_count": 1,
+          "examples": [
+            "",
+            "",
+            ""
+          ],
+          "types_breakdown": {
+            "string": 137
+          }
+        },
+        "lastChangeDate": {
+          "type": "null",
+          "null_ratio": 1.0,
+          "non_null": 0,
+          "distinct_count": 0,
+          "examples": [],
+          "types_breakdown": {
+            "null": 137
+          }
+        },
+        "plant": {
+          "type": "string",
+          "null_ratio": 0.0,
+          "non_null": 137,
+          "distinct_count": 5,
+          "examples": [
+            "WB05",
+            "WB05",
+            "WB05"
+          ],
+          "types_breakdown": {
+            "string": 137
+          }
+        },
+        "referenceSdDocument": {
+          "type": "string",
+          "null_ratio": 0.0,
+          "non_null": 137,
+          "distinct_count": 86,
+          "examples": [
+            "740556",
+            "740556",
+            "740556"
+          ],
+          "types_breakdown": {
+            "string": 137
+          }
+        },
+        "referenceSdDocumentItem": {
+          "type": "string",
+          "null_ratio": 0.0,
+          "non_null": 137,
+          "distinct_count": 12,
+          "examples": [
+            "000010",
+            "000020",
+            "000030"
+          ],
+          "types_breakdown": {
+            "string": 137
+          }
+        },
+        "storageLocation": {
+          "type": "string",
+          "null_ratio": 0.0,
+          "non_null": 137,
+          "distinct_count": 6,
+          "examples": [
+            "5031",
+            "5031",
+            "5031"
+          ],
+          "types_breakdown": {
+            "string": 137
+          }
+        }
+      },
+      "pk_candidates": [],
+      "composite_pk_candidates": [
+        [
+          "deliveryDocument",
+          "deliveryDocumentItem"
+        ],
+        [
+          "deliveryDocument",
+          "referenceSdDocumentItem"
+        ],
+        [
+          "deliveryDocumentItem",
+          "referenceSdDocument"
+        ]
+      ]
+    },
+    "payments_accounts_receivable": {
+      "entity": "payments_accounts_receivable",
+      "files": [
+        "sap-order-to-cash-dataset/sap-o2c-data/payments_accounts_receivable/part-20251119-133434-100.jsonl"
+      ],
+      "row_count": 120,
+      "fields": {
+        "companyCode": {
+          "type": "string",
+          "null_ratio": 0.0,
+          "non_null": 120,
+          "distinct_count": 1,
+          "examples": [
+            "ABCD",
+            "ABCD",
+            "ABCD"
+          ],
+          "types_breakdown": {
+            "string": 120
+          }
+        },
+        "fiscalYear": {
+          "type": "string",
+          "null_ratio": 0.0,
+          "non_null": 120,
+          "distinct_count": 1,
+          "examples": [
+            "2025",
+            "2025",
+            "2025"
+          ],
+          "types_breakdown": {
+            "string": 120
+          }
+        },
+        "accountingDocument": {
+          "type": "string",
+          "null_ratio": 0.0,
+          "non_null": 120,
+          "distinct_count": 120,
+          "examples": [
+            "9400000220",
+            "9400000226",
+            "9400000231"
+          ],
+          "types_breakdown": {
+            "string": 120
+          }
+        },
+        "accountingDocumentItem": {
+          "type": "string",
+          "null_ratio": 0.0,
+          "non_null": 120,
+          "distinct_count": 1,
+          "examples": [
+            "1",
+            "1",
+            "1"
+          ],
+          "types_breakdown": {
+            "string": 120
+          }
+        },
+        "clearingDate": {
+          "type": "datetime",
+          "null_ratio": 0.0,
+          "non_null": 120,
+          "distinct_count": 2,
+          "examples": [
+            "2025-04-02T00:00:00.000Z",
+            "2025-04-02T00:00:00.000Z",
+            "2025-04-02T00:00:00.000Z"
+          ],
+          "types_breakdown": {
+            "datetime": 120
+          }
+        },
+        "clearingAccountingDocument": {
+          "type": "string",
+          "null_ratio": 0.0,
+          "non_null": 120,
+          "distinct_count": 76,
+          "examples": [
+            "9400635977",
+            "9400635973",
+            "9400635969"
+          ],
+          "types_breakdown": {
+            "string": 120
+          }
+        },
+        "clearingDocFiscalYear": {
+          "type": "string",
+          "null_ratio": 0.0,
+          "non_null": 120,
+          "distinct_count": 1,
+          "examples": [
+            "2025",
+            "2025",
+            "2025"
+          ],
+          "types_breakdown": {
+            "string": 120
+          }
+        },
+        "amountInTransactionCurrency": {
+          "type": "string",
+          "null_ratio": 0.0,
+          "non_null": 120,
+          "distinct_count": 78,
+          "examples": [
+            "897.03",
+            "897",
+            "897.03"
+          ],
+          "types_breakdown": {
+            "string": 120
+          }
+        },
+        "transactionCurrency": {
+          "type": "string",
+          "null_ratio": 0.0,
+          "non_null": 120,
+          "distinct_count": 1,
+          "examples": [
+            "INR",
+            "INR",
+            "INR"
+          ],
+          "types_breakdown": {
+            "string": 120
+          }
+        },
+        "amountInCompanyCodeCurrency": {
+          "type": "string",
+          "null_ratio": 0.0,
+          "non_null": 120,
+          "distinct_count": 78,
+          "examples": [
+            "897.03",
+            "897",
+            "897.03"
+          ],
+          "types_breakdown": {
+            "string": 120
+          }
+        },
+        "companyCodeCurrency": {
+          "type": "string",
+          "null_ratio": 0.0,
+          "non_null": 120,
+          "distinct_count": 1,
+          "examples": [
+            "INR",
+            "INR",
+            "INR"
+          ],
+          "types_breakdown": {
+            "string": 120
+          }
+        },
+        "customer": {
+          "type": "string",
+          "null_ratio": 0.0,
+          "non_null": 120,
+          "distinct_count": 2,
+          "examples": [
+            "320000083",
+            "320000083",
+            "320000083"
+          ],
+          "types_breakdown": {
+            "string": 120
+          }
+        },
+        "invoiceReference": {
+          "type": "null",
+          "null_ratio": 1.0,
+          "non_null": 0,
+          "distinct_count": 0,
+          "examples": [],
+          "types_breakdown": {
+            "null": 120
+          }
+        },
+        "invoiceReferenceFiscalYear": {
+          "type": "null",
+          "null_ratio": 1.0,
+          "non_null": 0,
+          "distinct_count": 0,
+          "examples": [],
+          "types_breakdown": {
+            "null": 120
+          }
+        },
+        "salesDocument": {
+          "type": "null",
+          "null_ratio": 1.0,
+          "non_null": 0,
+          "distinct_count": 0,
+          "examples": [],
+          "types_breakdown": {
+            "null": 120
+          }
+        },
+        "salesDocumentItem": {
+          "type": "null",
+          "null_ratio": 1.0,
+          "non_null": 0,
+          "distinct_count": 0,
+          "examples": [],
+          "types_breakdown": {
+            "null": 120
+          }
+        },
+        "postingDate": {
+          "type": "datetime",
+          "null_ratio": 0.0,
+          "non_null": 120,
+          "distinct_count": 2,
+          "examples": [
+            "2025-04-02T00:00:00.000Z",
+            "2025-04-02T00:00:00.000Z",
+            "2025-04-02T00:00:00.000Z"
+          ],
+          "types_breakdown": {
+            "datetime": 120
+          }
+        },
+        "documentDate": {
+          "type": "datetime",
+          "null_ratio": 0.0,
+          "non_null": 120,
+          "distinct_count": 2,
+          "examples": [
+            "2025-04-02T00:00:00.000Z",
+            "2025-04-02T00:00:00.000Z",
+            "2025-04-02T00:00:00.000Z"
+          ],
+          "types_breakdown": {
+            "datetime": 120
+          }
+        },
+        "assignmentReference": {
+          "type": "null",
+          "null_ratio": 1.0,
+          "non_null": 0,
+          "distinct_count": 0,
+          "examples": [],
+          "types_breakdown": {
+            "null": 120
+          }
+        },
+        "glAccount": {
+          "type": "string",
+          "null_ratio": 0.0,
+          "non_null": 120,
+          "distinct_count": 1,
+          "examples": [
+            "15500020",
+            "15500020",
+            "15500020"
+          ],
+          "types_breakdown": {
+            "string": 120
+          }
+        },
+        "financialAccountType": {
+          "type": "string",
+          "null_ratio": 0.0,
+          "non_null": 120,
+          "distinct_count": 1,
+          "examples": [
+            "D",
+            "D",
+            "D"
+          ],
+          "types_breakdown": {
+            "string": 120
+          }
+        },
+        "profitCenter": {
+          "type": "string",
+          "null_ratio": 0.0,
+          "non_null": 120,
+          "distinct_count": 1,
+          "examples": [
+            "ABC001",
+            "ABC001",
+            "ABC001"
+          ],
+          "types_breakdown": {
+            "string": 120
+          }
+        },
+        "costCenter": {
+          "type": "null",
+          "null_ratio": 1.0,
+          "non_null": 0,
+          "distinct_count": 0,
+          "examples": [],
+          "types_breakdown": {
+            "null": 120
+          }
+        }
+      },
+      "pk_candidates": [
+        "accountingDocument"
+      ],
+      "composite_pk_candidates": []
+    },
+    "plants": {
+      "entity": "plants",
+      "files": [
+        "sap-order-to-cash-dataset/sap-o2c-data/plants/part-20251119-133445-279.jsonl"
+      ],
+      "row_count": 44,
+      "fields": {
+        "plant": {
+          "type": "string",
+          "null_ratio": 0.0,
+          "non_null": 44,
+          "distinct_count": 44,
+          "examples": [
+            "1001",
+            "1002",
+            "1003"
+          ],
+          "types_breakdown": {
+            "string": 44
+          }
+        },
+        "plantName": {
+          "type": "string",
+          "null_ratio": 0.0,
+          "non_null": 44,
+          "distinct_count": 44,
+          "examples": [
+            "Lake Christopher Plant",
+            "Lake Erica Plant",
+            "North Timothybury Plant"
+          ],
+          "types_breakdown": {
+            "string": 44
+          }
+        },
+        "valuationArea": {
+          "type": "string",
+          "null_ratio": 0.0,
+          "non_null": 44,
+          "distinct_count": 44,
+          "examples": [
+            "1001",
+            "1002",
+            "1003"
+          ],
+          "types_breakdown": {
+            "string": 44
+          }
+        },
+        "plantCustomer": {
+          "type": "string",
+          "null_ratio": 0.0,
+          "non_null": 44,
+          "distinct_count": 44,
+          "examples": [
+            "1001",
+            "1002",
+            "1003"
+          ],
+          "types_breakdown": {
+            "string": 44
+          }
+        },
+        "plantSupplier": {
+          "type": "string",
+          "null_ratio": 0.0,
+          "non_null": 44,
+          "distinct_count": 36,
+          "examples": [
+            "1001",
+            "1002",
+            "1003"
+          ],
+          "types_breakdown": {
+            "string": 44
+          }
+        },
+        "factoryCalendar": {
+          "type": "string",
+          "null_ratio": 0.0,
+          "non_null": 44,
+          "distinct_count": 1,
+          "examples": [
+            "IN",
+            "IN",
+            "IN"
+          ],
+          "types_breakdown": {
+            "string": 44
+          }
+        },
+        "defaultPurchasingOrganization": {
+          "type": "string",
+          "null_ratio": 0.0,
+          "non_null": 44,
+          "distinct_count": 1,
+          "examples": [
+            "",
+            "",
+            ""
+          ],
+          "types_breakdown": {
+            "string": 44
+          }
+        },
+        "salesOrganization": {
+          "type": "string",
+          "null_ratio": 0.0,
+          "non_null": 44,
+          "distinct_count": 1,
+          "examples": [
+            "ABCD",
+            "ABCD",
+            "ABCD"
+          ],
+          "types_breakdown": {
+            "string": 44
+          }
+        },
+        "addressId": {
+          "type": "string",
+          "null_ratio": 0.0,
+          "non_null": 44,
+          "distinct_count": 44,
+          "examples": [
+            "93",
+            "94",
+            "95"
+          ],
+          "types_breakdown": {
+            "string": 44
+          }
+        },
+        "plantCategory": {
+          "type": "string",
+          "null_ratio": 0.0,
+          "non_null": 44,
+          "distinct_count": 1,
+          "examples": [
+            "",
+            "",
+            ""
+          ],
+          "types_breakdown": {
+            "string": 44
+          }
+        },
+        "distributionChannel": {
+          "type": "string",
+          "null_ratio": 0.0,
+          "non_null": 44,
+          "distinct_count": 1,
+          "examples": [
+            "80",
+            "80",
+            "80"
+          ],
+          "types_breakdown": {
+            "string": 44
+          }
+        },
+        "division": {
+          "type": "string",
+          "null_ratio": 0.0,
+          "non_null": 44,
+          "distinct_count": 1,
+          "examples": [
+            "99",
+            "99",
+            "99"
+          ],
+          "types_breakdown": {
+            "string": 44
+          }
+        },
+        "language": {
+          "type": "string",
+          "null_ratio": 0.0,
+          "non_null": 44,
+          "distinct_count": 1,
+          "examples": [
+            "EN",
+            "EN",
+            "EN"
+          ],
+          "types_breakdown": {
+            "string": 44
+          }
+        },
+        "isMarkedForArchiving": {
+          "type": "bool",
+          "null_ratio": 0.0,
+          "non_null": 44,
+          "distinct_count": 1,
+          "examples": [
+            false,
+            false,
+            false
+          ],
+          "types_breakdown": {
+            "bool": 44
+          }
+        }
+      },
+      "pk_candidates": [
+        "plant",
+        "plantName",
+        "valuationArea",
+        "plantCustomer",
+        "addressId"
+      ],
+      "composite_pk_candidates": []
+    },
+    "product_descriptions": {
+      "entity": "product_descriptions",
+      "files": [
+        "sap-order-to-cash-dataset/sap-o2c-data/product_descriptions/part-20251119-133438-106.jsonl",
+        "sap-order-to-cash-dataset/sap-o2c-data/product_descriptions/part-20251119-133438-991.jsonl"
+      ],
+      "row_count": 69,
+      "fields": {
+        "product": {
+          "type": "string",
+          "null_ratio": 0.0,
+          "non_null": 69,
+          "distinct_count": 69,
+          "examples": [
+            "3001456",
+            "3001468",
+            "B8907367002246"
+          ],
+          "types_breakdown": {
+            "string": 69
+          }
+        },
+        "language": {
+          "type": "string",
+          "null_ratio": 0.0,
+          "non_null": 69,
+          "distinct_count": 1,
+          "examples": [
+            "EN",
+            "EN",
+            "EN"
+          ],
+          "types_breakdown": {
+            "string": 69
+          }
+        },
+        "productDescription": {
+          "type": "string",
+          "null_ratio": 0.0,
+          "non_null": 69,
+          "distinct_count": 69,
+          "examples": [
+            "WB-CG CHARCOAL GANG",
+            "WB-GS CHARCOAL GANG 22.2X24X6.7CM",
+            "THE CHARCOAL GANG"
+          ],
+          "types_breakdown": {
+            "string": 69
+          }
+        }
+      },
+      "pk_candidates": [
+        "product",
+        "productDescription"
+      ],
+      "composite_pk_candidates": []
+    },
+    "product_plants": {
+      "entity": "product_plants",
+      "files": [
+        "sap-order-to-cash-dataset/sap-o2c-data/product_plants/part-20251119-133439-232.jsonl",
+        "sap-order-to-cash-dataset/sap-o2c-data/product_plants/part-20251119-133439-488.jsonl",
+        "sap-order-to-cash-dataset/sap-o2c-data/product_plants/part-20251119-133439-814.jsonl",
+        "sap-order-to-cash-dataset/sap-o2c-data/product_plants/part-20251119-133440-467.jsonl"
+      ],
+      "row_count": 3036,
+      "fields": {
+        "product": {
+          "type": "string",
+          "null_ratio": 0.0,
+          "non_null": 3036,
+          "distinct_count": 69,
+          "examples": [
+            "S8907367010814",
+            "S8907367010814",
+            "S8907367010814"
+          ],
+          "types_breakdown": {
+            "string": 3036
+          }
+        },
+        "plant": {
+          "type": "string",
+          "null_ratio": 0.0,
+          "non_null": 3036,
+          "distinct_count": 44,
+          "examples": [
+            "MP07",
+            "PB05",
+            "PB07"
+          ],
+          "types_breakdown": {
+            "string": 3036
+          }
+        },
+        "countryOfOrigin": {
+          "type": "string",
+          "null_ratio": 0.0,
+          "non_null": 3036,
+          "distinct_count": 1,
+          "examples": [
+            "",
+            "",
+            ""
+          ],
+          "types_breakdown": {
+            "string": 3036
+          }
+        },
+        "regionOfOrigin": {
+          "type": "string",
+          "null_ratio": 0.0,
+          "non_null": 3036,
+          "distinct_count": 1,
+          "examples": [
+            "",
+            "",
+            ""
+          ],
+          "types_breakdown": {
+            "string": 3036
+          }
+        },
+        "productionInvtryManagedLoc": {
+          "type": "string",
+          "null_ratio": 0.0,
+          "non_null": 3036,
+          "distinct_count": 1,
+          "examples": [
+            "",
+            "",
+            ""
+          ],
+          "types_breakdown": {
+            "string": 3036
+          }
+        },
+        "availabilityCheckType": {
+          "type": "string",
+          "null_ratio": 0.0,
+          "non_null": 3036,
+          "distinct_count": 1,
+          "examples": [
+            "NC",
+            "NC",
+            "NC"
+          ],
+          "types_breakdown": {
+            "string": 3036
+          }
+        },
+        "fiscalYearVariant": {
+          "type": "string",
+          "null_ratio": 0.0,
+          "non_null": 3036,
+          "distinct_count": 1,
+          "examples": [
+            "",
+            "",
+            ""
+          ],
+          "types_breakdown": {
+            "string": 3036
+          }
+        },
+        "profitCenter": {
+          "type": "string",
+          "null_ratio": 0.0,
+          "non_null": 3036,
+          "distinct_count": 2,
+          "examples": [
+            "ABC001",
+            "ABC001",
+            "ABC001"
+          ],
+          "types_breakdown": {
+            "string": 3036
+          }
+        },
+        "mrpType": {
+          "type": "string",
+          "null_ratio": 0.0,
+          "non_null": 3036,
+          "distinct_count": 1,
+          "examples": [
+            "ND",
+            "ND",
+            "ND"
+          ],
+          "types_breakdown": {
+            "string": 3036
+          }
+        }
+      },
+      "pk_candidates": [],
+      "composite_pk_candidates": []
+    },
+    "product_storage_locations": {
+      "entity": "product_storage_locations",
+      "files": [
+        "sap-order-to-cash-dataset/sap-o2c-data/product_storage_locations/part-20251119-133440-440.jsonl",
+        "sap-order-to-cash-dataset/sap-o2c-data/product_storage_locations/part-20251119-133440-895.jsonl",
+        "sap-order-to-cash-dataset/sap-o2c-data/product_storage_locations/part-20251119-133441-19.jsonl",
+        "sap-order-to-cash-dataset/sap-o2c-data/product_storage_locations/part-20251119-133441-417.jsonl",
+        "sap-order-to-cash-dataset/sap-o2c-data/product_storage_locations/part-20251119-133441-547.jsonl",
+        "sap-order-to-cash-dataset/sap-o2c-data/product_storage_locations/part-20251119-133441-889.jsonl",
+        "sap-order-to-cash-dataset/sap-o2c-data/product_storage_locations/part-20251119-133442-116.jsonl",
+        "sap-order-to-cash-dataset/sap-o2c-data/product_storage_locations/part-20251119-133442-150.jsonl",
+        "sap-order-to-cash-dataset/sap-o2c-data/product_storage_locations/part-20251119-133442-95.jsonl",
+        "sap-order-to-cash-dataset/sap-o2c-data/product_storage_locations/part-20251119-133442-967.jsonl",
+        "sap-order-to-cash-dataset/sap-o2c-data/product_storage_locations/part-20251119-133443-26.jsonl",
+        "sap-order-to-cash-dataset/sap-o2c-data/product_storage_locations/part-20251119-133443-270.jsonl",
+        "sap-order-to-cash-dataset/sap-o2c-data/product_storage_locations/part-20251119-133443-397.jsonl",
+        "sap-order-to-cash-dataset/sap-o2c-data/product_storage_locations/part-20251119-133443-6.jsonl",
+        "sap-order-to-cash-dataset/sap-o2c-data/product_storage_locations/part-20251119-133444-294.jsonl",
+        "sap-order-to-cash-dataset/sap-o2c-data/product_storage_locations/part-20251119-133444-415.jsonl",
+        "sap-order-to-cash-dataset/sap-o2c-data/product_storage_locations/part-20251119-133444-49.jsonl",
+        "sap-order-to-cash-dataset/sap-o2c-data/product_storage_locations/part-20251119-133444-881.jsonl"
+      ],
+      "row_count": 16723,
+      "fields": {
+        "product": {
+          "type": "string",
+          "null_ratio": 0.0,
+          "non_null": 16723,
+          "distinct_count": 69,
+          "examples": [
+            "B8907367022152",
+            "B8907367022152",
+            "B8907367022152"
+          ],
+          "types_breakdown": {
+            "string": 16723
+          }
+        },
+        "plant": {
+          "type": "string",
+          "null_ratio": 0.0,
+          "non_null": 16723,
+          "distinct_count": 44,
+          "examples": [
+            "HR05",
+            "HR05",
+            "HR05"
+          ],
+          "types_breakdown": {
+            "string": 16723
+          }
+        },
+        "storageLocation": {
+          "type": "string",
+          "null_ratio": 0.0,
+          "non_null": 16723,
+          "distinct_count": 225,
+          "examples": [
+            "5066",
+            "5067",
+            "5075"
+          ],
+          "types_breakdown": {
+            "string": 16723
+          }
+        },
+        "physicalInventoryBlockInd": {
+          "type": "string",
+          "null_ratio": 0.0,
+          "non_null": 16723,
+          "distinct_count": 1,
+          "examples": [
+            "",
+            "",
+            ""
+          ],
+          "types_breakdown": {
+            "string": 16723
+          }
+        },
+        "dateOfLastPostedCntUnRstrcdStk": {
+          "type": "null",
+          "null_ratio": 1.0,
+          "non_null": 0,
+          "distinct_count": 0,
+          "examples": [],
+          "types_breakdown": {
+            "null": 16723
+          }
+        }
+      },
+      "pk_candidates": [],
+      "composite_pk_candidates": []
+    },
+    "products": {
+      "entity": "products",
+      "files": [
+        "sap-order-to-cash-dataset/sap-o2c-data/products/part-20251119-133438-390.jsonl",
+        "sap-order-to-cash-dataset/sap-o2c-data/products/part-20251119-133438-730.jsonl"
+      ],
+      "row_count": 69,
+      "fields": {
+        "product": {
+          "type": "string",
+          "null_ratio": 0.0,
+          "non_null": 69,
+          "distinct_count": 69,
+          "examples": [
+            "3001456",
+            "3001468",
+            "B8907367002246"
+          ],
+          "types_breakdown": {
+            "string": 69
+          }
+        },
+        "productType": {
+          "type": "string",
+          "null_ratio": 0.0,
+          "non_null": 69,
+          "distinct_count": 3,
+          "examples": [
+            "ZPKG",
+            "ZPKG",
+            "ZF01"
+          ],
+          "types_breakdown": {
+            "string": 69
+          }
+        },
+        "crossPlantStatus": {
+          "type": "string",
+          "null_ratio": 0.0,
+          "non_null": 69,
+          "distinct_count": 1,
+          "examples": [
+            "",
+            "",
+            ""
+          ],
+          "types_breakdown": {
+            "string": 69
+          }
+        },
+        "crossPlantStatusValidityDate": {
+          "type": "null",
+          "null_ratio": 1.0,
+          "non_null": 0,
+          "distinct_count": 0,
+          "examples": [],
+          "types_breakdown": {
+            "null": 69
+          }
+        },
+        "creationDate": {
+          "type": "datetime",
+          "null_ratio": 0.0,
+          "non_null": 69,
+          "distinct_count": 2,
+          "examples": [
+            "2024-11-26T00:00:00.000Z",
+            "2024-11-26T00:00:00.000Z",
+            "2024-12-12T00:00:00.000Z"
+          ],
+          "types_breakdown": {
+            "datetime": 69
+          }
+        },
+        "createdByUser": {
+          "type": "string",
+          "null_ratio": 0.0,
+          "non_null": 69,
+          "distinct_count": 1,
+          "examples": [
+            "USER108",
+            "USER108",
+            "USER108"
+          ],
+          "types_breakdown": {
+            "string": 69
+          }
+        },
+        "lastChangeDate": {
+          "type": "datetime",
+          "null_ratio": 0.0,
+          "non_null": 69,
+          "distinct_count": 5,
+          "examples": [
+            "2025-09-18T00:00:00.000Z",
+            "2025-09-25T00:00:00.000Z",
+            "2025-09-16T00:00:00.000Z"
+          ],
+          "types_breakdown": {
+            "datetime": 69
+          }
+        },
+        "lastChangeDateTime": {
+          "type": "datetime",
+          "null_ratio": 0.0,
+          "non_null": 69,
+          "distinct_count": 24,
+          "examples": [
+            "2025-09-18T11:51:26.000Z",
+            "2025-09-25T11:59:36.000Z",
+            "2025-09-16T13:12:08.000Z"
+          ],
+          "types_breakdown": {
+            "datetime": 69
+          }
+        },
+        "isMarkedForDeletion": {
+          "type": "bool",
+          "null_ratio": 0.0,
+          "non_null": 69,
+          "distinct_count": 1,
+          "examples": [
+            false,
+            false,
+            false
+          ],
+          "types_breakdown": {
+            "bool": 69
+          }
+        },
+        "productOldId": {
+          "type": "string",
+          "null_ratio": 0.0,
+          "non_null": 69,
+          "distinct_count": 69,
+          "examples": [
+            "WD-BOX-CG",
+            "GS-CG",
+            "ABC-WEB-225"
+          ],
+          "types_breakdown": {
+            "string": 69
+          }
+        },
+        "grossWeight": {
+          "type": "string",
+          "null_ratio": 0.0,
+          "non_null": 69,
+          "distinct_count": 2,
+          "examples": [
+            "0.012",
+            "0.012",
+            "0.11"
+          ],
+          "types_breakdown": {
+            "string": 69
+          }
+        },
+        "weightUnit": {
+          "type": "string",
+          "null_ratio": 0.0,
+          "non_null": 69,
+          "distinct_count": 1,
+          "examples": [
+            "KG",
+            "KG",
+            "KG"
+          ],
+          "types_breakdown": {
+            "string": 69
+          }
+        },
+        "netWeight": {
+          "type": "string",
+          "null_ratio": 0.0,
+          "non_null": 69,
+          "distinct_count": 2,
+          "examples": [
+            "0.01",
+            "0.01",
+            "0.1"
+          ],
+          "types_breakdown": {
+            "string": 69
+          }
+        },
+        "productGroup": {
+          "type": "string",
+          "null_ratio": 0.0,
+          "non_null": 69,
+          "distinct_count": 2,
+          "examples": [
+            "ZPKG004",
+            "ZPKG004",
+            "ZFG1001"
+          ],
+          "types_breakdown": {
+            "string": 69
+          }
+        },
+        "baseUnit": {
+          "type": "string",
+          "null_ratio": 0.0,
+          "non_null": 69,
+          "distinct_count": 1,
+          "examples": [
+            "PC",
+            "PC",
+            "PC"
+          ],
+          "types_breakdown": {
+            "string": 69
+          }
+        },
+        "division": {
+          "type": "string",
+          "null_ratio": 0.0,
+          "non_null": 69,
+          "distinct_count": 2,
+          "examples": [
+            "02",
+            "02",
+            "01"
+          ],
+          "types_breakdown": {
+            "string": 69
+          }
+        },
+        "industrySector": {
+          "type": "string",
+          "null_ratio": 0.0,
+          "non_null": 69,
+          "distinct_count": 1,
+          "examples": [
+            "M",
+            "M",
+            "M"
+          ],
+          "types_breakdown": {
+            "string": 69
+          }
+        }
+      },
+      "pk_candidates": [
+        "product",
+        "productOldId"
+      ],
+      "composite_pk_candidates": []
+    },
+    "sales_order_headers": {
+      "entity": "sales_order_headers",
+      "files": [
+        "sap-order-to-cash-dataset/sap-o2c-data/sales_order_headers/part-20251119-133429-440.jsonl"
+      ],
+      "row_count": 100,
+      "fields": {
+        "salesOrder": {
+          "type": "string",
+          "null_ratio": 0.0,
+          "non_null": 100,
+          "distinct_count": 100,
+          "examples": [
+            "740506",
+            "740507",
+            "740508"
+          ],
+          "types_breakdown": {
+            "string": 100
+          }
+        },
+        "salesOrderType": {
+          "type": "string",
+          "null_ratio": 0.0,
+          "non_null": 100,
+          "distinct_count": 1,
+          "examples": [
+            "OR",
+            "OR",
+            "OR"
+          ],
+          "types_breakdown": {
+            "string": 100
+          }
+        },
+        "salesOrganization": {
+          "type": "string",
+          "null_ratio": 0.0,
+          "non_null": 100,
+          "distinct_count": 1,
+          "examples": [
+            "ABCD",
+            "ABCD",
+            "ABCD"
+          ],
+          "types_breakdown": {
+            "string": 100
+          }
+        },
+        "distributionChannel": {
+          "type": "string",
+          "null_ratio": 0.0,
+          "non_null": 100,
+          "distinct_count": 2,
+          "examples": [
+            "05",
+            "05",
+            "05"
+          ],
+          "types_breakdown": {
+            "string": 100
+          }
+        },
+        "organizationDivision": {
+          "type": "string",
+          "null_ratio": 0.0,
+          "non_null": 100,
+          "distinct_count": 1,
+          "examples": [
+            "99",
+            "99",
+            "99"
+          ],
+          "types_breakdown": {
+            "string": 100
+          }
+        },
+        "salesGroup": {
+          "type": "string",
+          "null_ratio": 0.0,
+          "non_null": 100,
+          "distinct_count": 1,
+          "examples": [
+            "",
+            "",
+            ""
+          ],
+          "types_breakdown": {
+            "string": 100
+          }
+        },
+        "salesOffice": {
+          "type": "string",
+          "null_ratio": 0.0,
+          "non_null": 100,
+          "distinct_count": 1,
+          "examples": [
+            "",
+            "",
+            ""
+          ],
+          "types_breakdown": {
+            "string": 100
+          }
+        },
+        "soldToParty": {
+          "type": "string",
+          "null_ratio": 0.0,
+          "non_null": 100,
+          "distinct_count": 8,
+          "examples": [
+            "310000108",
+            "310000109",
+            "310000109"
+          ],
+          "types_breakdown": {
+            "string": 100
+          }
+        },
+        "creationDate": {
+          "type": "datetime",
+          "null_ratio": 0.0,
+          "non_null": 100,
+          "distinct_count": 2,
+          "examples": [
+            "2025-03-31T00:00:00.000Z",
+            "2025-03-31T00:00:00.000Z",
+            "2025-03-31T00:00:00.000Z"
+          ],
+          "types_breakdown": {
+            "datetime": 100
+          }
+        },
+        "createdByUser": {
+          "type": "string",
+          "null_ratio": 0.0,
+          "non_null": 100,
+          "distinct_count": 2,
+          "examples": [
+            "USER786",
+            "USER786",
+            "USER786"
+          ],
+          "types_breakdown": {
+            "string": 100
+          }
+        },
+        "lastChangeDateTime": {
+          "type": "datetime",
+          "null_ratio": 0.0,
+          "non_null": 100,
+          "distinct_count": 100,
+          "examples": [
+            "2025-03-31T06:42:38.786Z",
+            "2025-03-31T06:44:15.356Z",
+            "2025-03-31T11:07:27.454Z"
+          ],
+          "types_breakdown": {
+            "datetime": 100
+          }
+        },
+        "totalNetAmount": {
+          "type": "string",
+          "null_ratio": 0.0,
+          "non_null": 100,
+          "distinct_count": 63,
+          "examples": [
+            "17108.25",
+            "19021.27",
+            "883.88"
+          ],
+          "types_breakdown": {
+            "string": 100
+          }
+        },
+        "overallDeliveryStatus": {
+          "type": "string",
+          "null_ratio": 0.0,
+          "non_null": 100,
+          "distinct_count": 2,
+          "examples": [
+            "C",
+            "C",
+            "C"
+          ],
+          "types_breakdown": {
+            "string": 100
+          }
+        },
+        "overallOrdReltdBillgStatus": {
+          "type": "string",
+          "null_ratio": 0.0,
+          "non_null": 100,
+          "distinct_count": 1,
+          "examples": [
+            "",
+            "",
+            ""
+          ],
+          "types_breakdown": {
+            "string": 100
+          }
+        },
+        "overallSdDocReferenceStatus": {
+          "type": "string",
+          "null_ratio": 0.0,
+          "non_null": 100,
+          "distinct_count": 1,
+          "examples": [
+            "",
+            "",
+            ""
+          ],
+          "types_breakdown": {
+            "string": 100
+          }
+        },
+        "transactionCurrency": {
+          "type": "string",
+          "null_ratio": 0.0,
+          "non_null": 100,
+          "distinct_count": 1,
+          "examples": [
+            "INR",
+            "INR",
+            "INR"
+          ],
+          "types_breakdown": {
+            "string": 100
+          }
+        },
+        "pricingDate": {
+          "type": "datetime",
+          "null_ratio": 0.0,
+          "non_null": 100,
+          "distinct_count": 2,
+          "examples": [
+            "2025-03-31T00:00:00.000Z",
+            "2025-03-31T00:00:00.000Z",
+            "2025-03-31T00:00:00.000Z"
+          ],
+          "types_breakdown": {
+            "datetime": 100
+          }
+        },
+        "requestedDeliveryDate": {
+          "type": "datetime",
+          "null_ratio": 0.0,
+          "non_null": 100,
+          "distinct_count": 2,
+          "examples": [
+            "2025-03-31T00:00:00.000Z",
+            "2025-03-31T00:00:00.000Z",
+            "2025-03-31T00:00:00.000Z"
+          ],
+          "types_breakdown": {
+            "datetime": 100
+          }
+        },
+        "headerBillingBlockReason": {
+          "type": "string",
+          "null_ratio": 0.0,
+          "non_null": 100,
+          "distinct_count": 1,
+          "examples": [
+            "",
+            "",
+            ""
+          ],
+          "types_breakdown": {
+            "string": 100
+          }
+        },
+        "deliveryBlockReason": {
+          "type": "string",
+          "null_ratio": 0.0,
+          "non_null": 100,
+          "distinct_count": 1,
+          "examples": [
+            "",
+            "",
+            ""
+          ],
+          "types_breakdown": {
+            "string": 100
+          }
+        },
+        "incotermsClassification": {
+          "type": "string",
+          "null_ratio": 0.0,
+          "non_null": 100,
+          "distinct_count": 1,
+          "examples": [
+            "FOR",
+            "FOR",
+            "FOR"
+          ],
+          "types_breakdown": {
+            "string": 100
+          }
+        },
+        "incotermsLocation1": {
+          "type": "string",
+          "null_ratio": 0.0,
+          "non_null": 100,
+          "distinct_count": 2,
+          "examples": [
+            "Millerborough",
+            "Millerborough",
+            "Millerborough"
+          ],
+          "types_breakdown": {
+            "string": 100
+          }
+        },
+        "customerPaymentTerms": {
+          "type": "string",
+          "null_ratio": 0.0,
+          "non_null": 100,
+          "distinct_count": 2,
+          "examples": [
+            "Z009",
+            "Z009",
+            "Z009"
+          ],
+          "types_breakdown": {
+            "string": 100
+          }
+        },
+        "totalCreditCheckStatus": {
+          "type": "string",
+          "null_ratio": 0.0,
+          "non_null": 100,
+          "distinct_count": 1,
+          "examples": [
+            "",
+            "",
+            ""
+          ],
+          "types_breakdown": {
+            "string": 100
+          }
+        }
+      },
+      "pk_candidates": [
+        "salesOrder",
+        "lastChangeDateTime"
+      ],
+      "composite_pk_candidates": []
+    },
+    "sales_order_items": {
+      "entity": "sales_order_items",
+      "files": [
+        "sap-order-to-cash-dataset/sap-o2c-data/sales_order_items/part-20251119-133429-452.jsonl",
+        "sap-order-to-cash-dataset/sap-o2c-data/sales_order_items/part-20251119-133430-214.jsonl"
+      ],
+      "row_count": 167,
+      "fields": {
+        "salesOrder": {
+          "type": "string",
+          "null_ratio": 0.0,
+          "non_null": 167,
+          "distinct_count": 100,
+          "examples": [
+            "740506",
+            "740506",
+            "740506"
+          ],
+          "types_breakdown": {
+            "string": 167
+          }
+        },
+        "salesOrderItem": {
+          "type": "string",
+          "null_ratio": 0.0,
+          "non_null": 167,
+          "distinct_count": 12,
+          "examples": [
+            "10",
+            "20",
+            "30"
+          ],
+          "types_breakdown": {
+            "string": 167
+          }
+        },
+        "salesOrderItemCategory": {
+          "type": "string",
+          "null_ratio": 0.0,
+          "non_null": 167,
+          "distinct_count": 1,
+          "examples": [
+            "TAN",
+            "TAN",
+            "TAN"
+          ],
+          "types_breakdown": {
+            "string": 167
+          }
+        },
+        "material": {
+          "type": "string",
+          "null_ratio": 0.0,
+          "non_null": 167,
+          "distinct_count": 69,
+          "examples": [
+            "S8907367001003",
+            "S8907367000327",
+            "S8907367020073"
+          ],
+          "types_breakdown": {
+            "string": 167
+          }
+        },
+        "requestedQuantity": {
+          "type": "string",
+          "null_ratio": 0.0,
+          "non_null": 167,
+          "distinct_count": 11,
+          "examples": [
+            "48",
+            "10",
+            "8"
+          ],
+          "types_breakdown": {
+            "string": 167
+          }
+        },
+        "requestedQuantityUnit": {
+          "type": "string",
+          "null_ratio": 0.0,
+          "non_null": 167,
+          "distinct_count": 1,
+          "examples": [
+            "PC",
+            "PC",
+            "PC"
+          ],
+          "types_breakdown": {
+            "string": 167
+          }
+        },
+        "transactionCurrency": {
+          "type": "string",
+          "null_ratio": 0.0,
+          "non_null": 167,
+          "distinct_count": 1,
+          "examples": [
+            "INR",
+            "INR",
+            "INR"
+          ],
+          "types_breakdown": {
+            "string": 167
+          }
+        },
+        "netAmount": {
+          "type": "string",
+          "null_ratio": 0.0,
+          "non_null": 167,
+          "distinct_count": 79,
+          "examples": [
+            "9966.1",
+            "2366.95",
+            "1181.69"
+          ],
+          "types_breakdown": {
+            "string": 167
+          }
+        },
+        "materialGroup": {
+          "type": "string",
+          "null_ratio": 0.0,
+          "non_null": 167,
+          "distinct_count": 2,
+          "examples": [
+            "ZFG1001",
+            "ZFG1001",
+            "ZFG1001"
+          ],
+          "types_breakdown": {
+            "string": 167
+          }
+        },
+        "productionPlant": {
+          "type": "string",
+          "null_ratio": 0.0,
+          "non_null": 167,
+          "distinct_count": 7,
+          "examples": [
+            "1920",
+            "1920",
+            "1920"
+          ],
+          "types_breakdown": {
+            "string": 167
+          }
+        },
+        "storageLocation": {
+          "type": "string",
+          "null_ratio": 0.0,
+          "non_null": 167,
+          "distinct_count": 8,
+          "examples": [
+            "V2S2",
+            "V2S2",
+            "V2S2"
+          ],
+          "types_breakdown": {
+            "string": 167
+          }
+        },
+        "salesDocumentRjcnReason": {
+          "type": "string",
+          "null_ratio": 0.0,
+          "non_null": 167,
+          "distinct_count": 2,
+          "examples": [
+            "",
+            "",
+            ""
+          ],
+          "types_breakdown": {
+            "string": 167
+          }
+        },
+        "itemBillingBlockReason": {
+          "type": "string",
+          "null_ratio": 0.0,
+          "non_null": 167,
+          "distinct_count": 1,
+          "examples": [
+            "",
+            "",
+            ""
+          ],
+          "types_breakdown": {
+            "string": 167
+          }
+        }
+      },
+      "pk_candidates": [],
+      "composite_pk_candidates": [
+        [
+          "salesOrder",
+          "salesOrderItem"
+        ]
+      ]
+    },
+    "sales_order_schedule_lines": {
+      "entity": "sales_order_schedule_lines",
+      "files": [
+        "sap-order-to-cash-dataset/sap-o2c-data/sales_order_schedule_lines/part-20251119-133430-302.jsonl",
+        "sap-order-to-cash-dataset/sap-o2c-data/sales_order_schedule_lines/part-20251119-133430-979.jsonl"
+      ],
+      "row_count": 179,
+      "fields": {
+        "salesOrder": {
+          "type": "string",
+          "null_ratio": 0.0,
+          "non_null": 179,
+          "distinct_count": 100,
+          "examples": [
+            "740506",
+            "740506",
+            "740506"
+          ],
+          "types_breakdown": {
+            "string": 179
+          }
+        },
+        "salesOrderItem": {
+          "type": "string",
+          "null_ratio": 0.0,
+          "non_null": 179,
+          "distinct_count": 12,
+          "examples": [
+            "10",
+            "20",
+            "30"
+          ],
+          "types_breakdown": {
+            "string": 179
+          }
+        },
+        "scheduleLine": {
+          "type": "string",
+          "null_ratio": 0.0,
+          "non_null": 179,
+          "distinct_count": 2,
+          "examples": [
+            "1",
+            "1",
+            "1"
+          ],
+          "types_breakdown": {
+            "string": 179
+          }
+        },
+        "confirmedDeliveryDate": {
+          "type": "datetime",
+          "null_ratio": 0.0670391061452514,
+          "non_null": 167,
+          "distinct_count": 3,
+          "examples": [
+            "2025-03-31T00:00:00.000Z",
+            "2025-03-31T00:00:00.000Z",
+            "2025-03-31T00:00:00.000Z"
+          ],
+          "types_breakdown": {
+            "datetime": 167,
+            "null": 12
+          }
+        },
+        "orderQuantityUnit": {
+          "type": "string",
+          "null_ratio": 0.0,
+          "non_null": 179,
+          "distinct_count": 1,
+          "examples": [
+            "PC",
+            "PC",
+            "PC"
+          ],
+          "types_breakdown": {
+            "string": 179
+          }
+        },
+        "confdOrderQtyByMatlAvailCheck": {
+          "type": "string",
+          "null_ratio": 0.0,
+          "non_null": 179,
+          "distinct_count": 12,
+          "examples": [
+            "48",
+            "10",
+            "8"
+          ],
+          "types_breakdown": {
+            "string": 179
+          }
+        }
+      },
+      "pk_candidates": [],
+      "composite_pk_candidates": []
+    }
+  },
+  "primary_key_choice": {
+    "billing_document_cancellations": "billingDocument",
+    "billing_document_headers": "billingDocument",
+    "billing_document_items": null,
+    "business_partner_addresses": "businessPartner",
+    "business_partners": "businessPartner",
+    "customer_company_assignments": "customer",
+    "customer_sales_area_assignments": null,
+    "journal_entry_items_accounts_receivable": "accountingDocument",
+    "outbound_delivery_headers": "deliveryDocument",
+    "outbound_delivery_items": null,
+    "payments_accounts_receivable": "accountingDocument",
+    "plants": "plant",
+    "product_descriptions": "product",
+    "product_plants": null,
+    "product_storage_locations": null,
+    "products": "product",
+    "sales_order_headers": "salesOrder",
+    "sales_order_items": null,
+    "sales_order_schedule_lines": null
+  },
+  "relationships": [
+    {
+      "source_entity": "billing_document_cancellations",
+      "source_field": "billingDocument",
+      "target_entity": "billing_document_headers",
+      "target_field": "billingDocument",
+      "overlap_values": 80,
+      "source_unique_values": 80,
+      "target_unique_values": 163,
+      "coverage_source": 1.0,
+      "coverage_target": 0.49079754601226994,
+      "estimated_cardinality": "1:1_or_N:1"
+    },
+    {
+      "source_entity": "billing_document_cancellations",
+      "source_field": "soldToParty",
+      "target_entity": "business_partner_addresses",
+      "target_field": "businessPartner",
+      "overlap_values": 4,
+      "source_unique_values": 4,
+      "target_unique_values": 8,
+      "coverage_source": 1.0,
+      "coverage_target": 0.5,
+      "estimated_cardinality": "N:1"
+    },
+    {
+      "source_entity": "billing_document_cancellations",
+      "source_field": "soldToParty",
+      "target_entity": "business_partners",
+      "target_field": "businessPartner",
+      "overlap_values": 4,
+      "source_unique_values": 4,
+      "target_unique_values": 8,
+      "coverage_source": 1.0,
+      "coverage_target": 0.5,
+      "estimated_cardinality": "N:1"
+    },
+    {
+      "source_entity": "billing_document_cancellations",
+      "source_field": "soldToParty",
+      "target_entity": "customer_company_assignments",
+      "target_field": "customer",
+      "overlap_values": 4,
+      "source_unique_values": 4,
+      "target_unique_values": 8,
+      "coverage_source": 1.0,
+      "coverage_target": 0.5,
+      "estimated_cardinality": "N:1"
+    },
+    {
+      "source_entity": "billing_document_cancellations",
+      "source_field": "accountingDocument",
+      "target_entity": "journal_entry_items_accounts_receivable",
+      "target_field": "accountingDocument",
+      "overlap_values": 64,
+      "source_unique_values": 80,
+      "target_unique_values": 123,
+      "coverage_source": 0.8,
+      "coverage_target": 0.5203252032520326,
+      "estimated_cardinality": "1:1_or_N:1"
+    },
+    {
+      "source_entity": "billing_document_cancellations",
+      "source_field": "accountingDocument",
+      "target_entity": "payments_accounts_receivable",
+      "target_field": "accountingDocument",
+      "overlap_values": 64,
+      "source_unique_values": 80,
+      "target_unique_values": 120,
+      "coverage_source": 0.8,
+      "coverage_target": 0.5333333333333333,
+      "estimated_cardinality": "1:1_or_N:1"
+    },
+    {
+      "source_entity": "billing_document_headers",
+      "source_field": "soldToParty",
+      "target_entity": "business_partner_addresses",
+      "target_field": "businessPartner",
+      "overlap_values": 4,
+      "source_unique_values": 4,
+      "target_unique_values": 8,
+      "coverage_source": 1.0,
+      "coverage_target": 0.5,
+      "estimated_cardinality": "N:1"
+    },
+    {
+      "source_entity": "billing_document_headers",
+      "source_field": "soldToParty",
+      "target_entity": "business_partners",
+      "target_field": "businessPartner",
+      "overlap_values": 4,
+      "source_unique_values": 4,
+      "target_unique_values": 8,
+      "coverage_source": 1.0,
+      "coverage_target": 0.5,
+      "estimated_cardinality": "N:1"
+    },
+    {
+      "source_entity": "billing_document_headers",
+      "source_field": "soldToParty",
+      "target_entity": "customer_company_assignments",
+      "target_field": "customer",
+      "overlap_values": 4,
+      "source_unique_values": 4,
+      "target_unique_values": 8,
+      "coverage_source": 1.0,
+      "coverage_target": 0.5,
+      "estimated_cardinality": "N:1"
+    },
+    {
+      "source_entity": "billing_document_headers",
+      "source_field": "cancelledBillingDocument",
+      "target_entity": "billing_document_cancellations",
+      "target_field": "billingDocument",
+      "overlap_values": 80,
+      "source_unique_values": 81,
+      "target_unique_values": 80,
+      "coverage_source": 0.9876543209876543,
+      "coverage_target": 1.0,
+      "estimated_cardinality": "N:1"
+    },
+    {
+      "source_entity": "billing_document_headers",
+      "source_field": "accountingDocument",
+      "target_entity": "journal_entry_items_accounts_receivable",
+      "target_field": "accountingDocument",
+      "overlap_values": 123,
+      "source_unique_values": 163,
+      "target_unique_values": 123,
+      "coverage_source": 0.754601226993865,
+      "coverage_target": 1.0,
+      "estimated_cardinality": "1:1_or_N:1"
+    },
+    {
+      "source_entity": "billing_document_headers",
+      "source_field": "accountingDocument",
+      "target_entity": "payments_accounts_receivable",
+      "target_field": "accountingDocument",
+      "overlap_values": 120,
+      "source_unique_values": 163,
+      "target_unique_values": 120,
+      "coverage_source": 0.7361963190184049,
+      "coverage_target": 1.0,
+      "estimated_cardinality": "1:1_or_N:1"
+    },
+    {
+      "source_entity": "billing_document_headers",
+      "source_field": "billingDocument",
+      "target_entity": "billing_document_cancellations",
+      "target_field": "billingDocument",
+      "overlap_values": 80,
+      "source_unique_values": 163,
+      "target_unique_values": 80,
+      "coverage_source": 0.49079754601226994,
+      "coverage_target": 1.0,
+      "estimated_cardinality": "1:1_or_N:1"
+    },
+    {
+      "source_entity": "billing_document_items",
+      "source_field": "billingDocument",
+      "target_entity": "billing_document_headers",
+      "target_field": "billingDocument",
+      "overlap_values": 163,
+      "source_unique_values": 163,
+      "target_unique_values": 163,
+      "coverage_source": 1.0,
+      "coverage_target": 1.0,
+      "estimated_cardinality": "N:1"
+    },
+    {
+      "source_entity": "billing_document_items",
+      "source_field": "material",
+      "target_entity": "product_descriptions",
+      "target_field": "product",
+      "overlap_values": 55,
+      "source_unique_values": 55,
+      "target_unique_values": 69,
+      "coverage_source": 1.0,
+      "coverage_target": 0.7971014492753623,
+      "estimated_cardinality": "N:1"
+    },
+    {
+      "source_entity": "billing_document_items",
+      "source_field": "material",
+      "target_entity": "products",
+      "target_field": "product",
+      "overlap_values": 55,
+      "source_unique_values": 55,
+      "target_unique_values": 69,
+      "coverage_source": 1.0,
+      "coverage_target": 0.7971014492753623,
+      "estimated_cardinality": "N:1"
+    },
+    {
+      "source_entity": "billing_document_items",
+      "source_field": "referenceSdDocument",
+      "target_entity": "outbound_delivery_headers",
+      "target_field": "deliveryDocument",
+      "overlap_values": 83,
+      "source_unique_values": 83,
+      "target_unique_values": 86,
+      "coverage_source": 1.0,
+      "coverage_target": 0.9651162790697675,
+      "estimated_cardinality": "N:1"
+    },
+    {
+      "source_entity": "billing_document_items",
+      "source_field": "billingDocument",
+      "target_entity": "billing_document_cancellations",
+      "target_field": "billingDocument",
+      "overlap_values": 80,
+      "source_unique_values": 163,
+      "target_unique_values": 80,
+      "coverage_source": 0.49079754601226994,
+      "coverage_target": 1.0,
+      "estimated_cardinality": "N:1"
+    },
+    {
+      "source_entity": "business_partner_addresses",
+      "source_field": "businessPartner",
+      "target_entity": "business_partners",
+      "target_field": "businessPartner",
+      "overlap_values": 8,
+      "source_unique_values": 8,
+      "target_unique_values": 8,
+      "coverage_source": 1.0,
+      "coverage_target": 1.0,
+      "estimated_cardinality": "1:1_or_N:1"
+    },
+    {
+      "source_entity": "business_partner_addresses",
+      "source_field": "businessPartner",
+      "target_entity": "customer_company_assignments",
+      "target_field": "customer",
+      "overlap_values": 8,
+      "source_unique_values": 8,
+      "target_unique_values": 8,
+      "coverage_source": 1.0,
+      "coverage_target": 1.0,
+      "estimated_cardinality": "1:1_or_N:1"
+    },
+    {
+      "source_entity": "business_partners",
+      "source_field": "businessPartner",
+      "target_entity": "business_partner_addresses",
+      "target_field": "businessPartner",
+      "overlap_values": 8,
+      "source_unique_values": 8,
+      "target_unique_values": 8,
+      "coverage_source": 1.0,
+      "coverage_target": 1.0,
+      "estimated_cardinality": "1:1_or_N:1"
+    },
+    {
+      "source_entity": "business_partners",
+      "source_field": "businessPartner",
+      "target_entity": "customer_company_assignments",
+      "target_field": "customer",
+      "overlap_values": 8,
+      "source_unique_values": 8,
+      "target_unique_values": 8,
+      "coverage_source": 1.0,
+      "coverage_target": 1.0,
+      "estimated_cardinality": "1:1_or_N:1"
+    },
+    {
+      "source_entity": "business_partners",
+      "source_field": "customer",
+      "target_entity": "business_partner_addresses",
+      "target_field": "businessPartner",
+      "overlap_values": 8,
+      "source_unique_values": 8,
+      "target_unique_values": 8,
+      "coverage_source": 1.0,
+      "coverage_target": 1.0,
+      "estimated_cardinality": "1:1_or_N:1"
+    },
+    {
+      "source_entity": "business_partners",
+      "source_field": "customer",
+      "target_entity": "customer_company_assignments",
+      "target_field": "customer",
+      "overlap_values": 8,
+      "source_unique_values": 8,
+      "target_unique_values": 8,
+      "coverage_source": 1.0,
+      "coverage_target": 1.0,
+      "estimated_cardinality": "1:1_or_N:1"
+    },
+    {
+      "source_entity": "customer_company_assignments",
+      "source_field": "customer",
+      "target_entity": "business_partner_addresses",
+      "target_field": "businessPartner",
+      "overlap_values": 8,
+      "source_unique_values": 8,
+      "target_unique_values": 8,
+      "coverage_source": 1.0,
+      "coverage_target": 1.0,
+      "estimated_cardinality": "1:1_or_N:1"
+    },
+    {
+      "source_entity": "customer_company_assignments",
+      "source_field": "customer",
+      "target_entity": "business_partners",
+      "target_field": "businessPartner",
+      "overlap_values": 8,
+      "source_unique_values": 8,
+      "target_unique_values": 8,
+      "coverage_source": 1.0,
+      "coverage_target": 1.0,
+      "estimated_cardinality": "1:1_or_N:1"
+    },
+    {
+      "source_entity": "customer_sales_area_assignments",
+      "source_field": "customer",
+      "target_entity": "business_partner_addresses",
+      "target_field": "businessPartner",
+      "overlap_values": 8,
+      "source_unique_values": 8,
+      "target_unique_values": 8,
+      "coverage_source": 1.0,
+      "coverage_target": 1.0,
+      "estimated_cardinality": "N:1"
+    },
+    {
+      "source_entity": "customer_sales_area_assignments",
+      "source_field": "customer",
+      "target_entity": "business_partners",
+      "target_field": "businessPartner",
+      "overlap_values": 8,
+      "source_unique_values": 8,
+      "target_unique_values": 8,
+      "coverage_source": 1.0,
+      "coverage_target": 1.0,
+      "estimated_cardinality": "N:1"
+    },
+    {
+      "source_entity": "customer_sales_area_assignments",
+      "source_field": "customer",
+      "target_entity": "customer_company_assignments",
+      "target_field": "customer",
+      "overlap_values": 8,
+      "source_unique_values": 8,
+      "target_unique_values": 8,
+      "coverage_source": 1.0,
+      "coverage_target": 1.0,
+      "estimated_cardinality": "N:1"
+    },
+    {
+      "source_entity": "journal_entry_items_accounts_receivable",
+      "source_field": "referenceDocument",
+      "target_entity": "billing_document_headers",
+      "target_field": "billingDocument",
+      "overlap_values": 123,
+      "source_unique_values": 123,
+      "target_unique_values": 163,
+      "coverage_source": 1.0,
+      "coverage_target": 0.754601226993865,
+      "estimated_cardinality": "1:1_or_N:1"
+    },
+    {
+      "source_entity": "journal_entry_items_accounts_receivable",
+      "source_field": "customer",
+      "target_entity": "business_partner_addresses",
+      "target_field": "businessPartner",
+      "overlap_values": 2,
+      "source_unique_values": 2,
+      "target_unique_values": 8,
+      "coverage_source": 1.0,
+      "coverage_target": 0.25,
+      "estimated_cardinality": "N:1"
+    },
+    {
+      "source_entity": "journal_entry_items_accounts_receivable",
+      "source_field": "customer",
+      "target_entity": "business_partners",
+      "target_field": "businessPartner",
+      "overlap_values": 2,
+      "source_unique_values": 2,
+      "target_unique_values": 8,
+      "coverage_source": 1.0,
+      "coverage_target": 0.25,
+      "estimated_cardinality": "N:1"
+    },
+    {
+      "source_entity": "journal_entry_items_accounts_receivable",
+      "source_field": "customer",
+      "target_entity": "customer_company_assignments",
+      "target_field": "customer",
+      "overlap_values": 2,
+      "source_unique_values": 2,
+      "target_unique_values": 8,
+      "coverage_source": 1.0,
+      "coverage_target": 0.25,
+      "estimated_cardinality": "N:1"
+    },
+    {
+      "source_entity": "journal_entry_items_accounts_receivable",
+      "source_field": "accountingDocument",
+      "target_entity": "payments_accounts_receivable",
+      "target_field": "accountingDocument",
+      "overlap_values": 120,
+      "source_unique_values": 123,
+      "target_unique_values": 120,
+      "coverage_source": 0.975609756097561,
+      "coverage_target": 1.0,
+      "estimated_cardinality": "1:1_or_N:1"
+    },
+    {
+      "source_entity": "journal_entry_items_accounts_receivable",
+      "source_field": "clearingAccountingDocument",
+      "target_entity": "payments_accounts_receivable",
+      "target_field": "accountingDocument",
+      "overlap_values": 56,
+      "source_unique_values": 77,
+      "target_unique_values": 120,
+      "coverage_source": 0.7272727272727273,
+      "coverage_target": 0.4666666666666667,
+      "estimated_cardinality": "N:1"
+    },
+    {
+      "source_entity": "outbound_delivery_headers",
+      "source_field": "shippingPoint",
+      "target_entity": "plants",
+      "target_field": "plant",
+      "overlap_values": 5,
+      "source_unique_values": 5,
+      "target_unique_values": 44,
+      "coverage_source": 1.0,
+      "coverage_target": 0.11363636363636363,
+      "estimated_cardinality": "N:1"
+    },
+    {
+      "source_entity": "outbound_delivery_items",
+      "source_field": "deliveryDocument",
+      "target_entity": "outbound_delivery_headers",
+      "target_field": "deliveryDocument",
+      "overlap_values": 86,
+      "source_unique_values": 86,
+      "target_unique_values": 86,
+      "coverage_source": 1.0,
+      "coverage_target": 1.0,
+      "estimated_cardinality": "N:1"
+    },
+    {
+      "source_entity": "outbound_delivery_items",
+      "source_field": "plant",
+      "target_entity": "plants",
+      "target_field": "plant",
+      "overlap_values": 5,
+      "source_unique_values": 5,
+      "target_unique_values": 44,
+      "coverage_source": 1.0,
+      "coverage_target": 0.11363636363636363,
+      "estimated_cardinality": "N:1"
+    },
+    {
+      "source_entity": "outbound_delivery_items",
+      "source_field": "referenceSdDocument",
+      "target_entity": "sales_order_headers",
+      "target_field": "salesOrder",
+      "overlap_values": 86,
+      "source_unique_values": 86,
+      "target_unique_values": 100,
+      "coverage_source": 1.0,
+      "coverage_target": 0.86,
+      "estimated_cardinality": "N:1"
+    },
+    {
+      "source_entity": "payments_accounts_receivable",
+      "source_field": "accountingDocument",
+      "target_entity": "journal_entry_items_accounts_receivable",
+      "target_field": "accountingDocument",
+      "overlap_values": 120,
+      "source_unique_values": 120,
+      "target_unique_values": 123,
+      "coverage_source": 1.0,
+      "coverage_target": 0.975609756097561,
+      "estimated_cardinality": "1:1_or_N:1"
+    },
+    {
+      "source_entity": "payments_accounts_receivable",
+      "source_field": "customer",
+      "target_entity": "business_partner_addresses",
+      "target_field": "businessPartner",
+      "overlap_values": 2,
+      "source_unique_values": 2,
+      "target_unique_values": 8,
+      "coverage_source": 1.0,
+      "coverage_target": 0.25,
+      "estimated_cardinality": "N:1"
+    },
+    {
+      "source_entity": "payments_accounts_receivable",
+      "source_field": "customer",
+      "target_entity": "business_partners",
+      "target_field": "businessPartner",
+      "overlap_values": 2,
+      "source_unique_values": 2,
+      "target_unique_values": 8,
+      "coverage_source": 1.0,
+      "coverage_target": 0.25,
+      "estimated_cardinality": "N:1"
+    },
+    {
+      "source_entity": "payments_accounts_receivable",
+      "source_field": "customer",
+      "target_entity": "customer_company_assignments",
+      "target_field": "customer",
+      "overlap_values": 2,
+      "source_unique_values": 2,
+      "target_unique_values": 8,
+      "coverage_source": 1.0,
+      "coverage_target": 0.25,
+      "estimated_cardinality": "N:1"
+    },
+    {
+      "source_entity": "payments_accounts_receivable",
+      "source_field": "clearingAccountingDocument",
+      "target_entity": "journal_entry_items_accounts_receivable",
+      "target_field": "accountingDocument",
+      "overlap_values": 56,
+      "source_unique_values": 76,
+      "target_unique_values": 123,
+      "coverage_source": 0.7368421052631579,
+      "coverage_target": 0.45528455284552843,
+      "estimated_cardinality": "N:1"
+    },
+    {
+      "source_entity": "product_descriptions",
+      "source_field": "product",
+      "target_entity": "products",
+      "target_field": "product",
+      "overlap_values": 69,
+      "source_unique_values": 69,
+      "target_unique_values": 69,
+      "coverage_source": 1.0,
+      "coverage_target": 1.0,
+      "estimated_cardinality": "1:1_or_N:1"
+    },
+    {
+      "source_entity": "product_plants",
+      "source_field": "product",
+      "target_entity": "product_descriptions",
+      "target_field": "product",
+      "overlap_values": 69,
+      "source_unique_values": 69,
+      "target_unique_values": 69,
+      "coverage_source": 1.0,
+      "coverage_target": 1.0,
+      "estimated_cardinality": "N:1"
+    },
+    {
+      "source_entity": "product_plants",
+      "source_field": "product",
+      "target_entity": "products",
+      "target_field": "product",
+      "overlap_values": 69,
+      "source_unique_values": 69,
+      "target_unique_values": 69,
+      "coverage_source": 1.0,
+      "coverage_target": 1.0,
+      "estimated_cardinality": "N:1"
+    },
+    {
+      "source_entity": "product_plants",
+      "source_field": "plant",
+      "target_entity": "plants",
+      "target_field": "plant",
+      "overlap_values": 44,
+      "source_unique_values": 44,
+      "target_unique_values": 44,
+      "coverage_source": 1.0,
+      "coverage_target": 1.0,
+      "estimated_cardinality": "N:1"
+    },
+    {
+      "source_entity": "product_storage_locations",
+      "source_field": "product",
+      "target_entity": "product_descriptions",
+      "target_field": "product",
+      "overlap_values": 69,
+      "source_unique_values": 69,
+      "target_unique_values": 69,
+      "coverage_source": 1.0,
+      "coverage_target": 1.0,
+      "estimated_cardinality": "N:1"
+    },
+    {
+      "source_entity": "product_storage_locations",
+      "source_field": "product",
+      "target_entity": "products",
+      "target_field": "product",
+      "overlap_values": 69,
+      "source_unique_values": 69,
+      "target_unique_values": 69,
+      "coverage_source": 1.0,
+      "coverage_target": 1.0,
+      "estimated_cardinality": "N:1"
+    },
+    {
+      "source_entity": "product_storage_locations",
+      "source_field": "plant",
+      "target_entity": "plants",
+      "target_field": "plant",
+      "overlap_values": 44,
+      "source_unique_values": 44,
+      "target_unique_values": 44,
+      "coverage_source": 1.0,
+      "coverage_target": 1.0,
+      "estimated_cardinality": "N:1"
+    },
+    {
+      "source_entity": "products",
+      "source_field": "product",
+      "target_entity": "product_descriptions",
+      "target_field": "product",
+      "overlap_values": 69,
+      "source_unique_values": 69,
+      "target_unique_values": 69,
+      "coverage_source": 1.0,
+      "coverage_target": 1.0,
+      "estimated_cardinality": "1:1_or_N:1"
+    },
+    {
+      "source_entity": "sales_order_headers",
+      "source_field": "soldToParty",
+      "target_entity": "business_partner_addresses",
+      "target_field": "businessPartner",
+      "overlap_values": 8,
+      "source_unique_values": 8,
+      "target_unique_values": 8,
+      "coverage_source": 1.0,
+      "coverage_target": 1.0,
+      "estimated_cardinality": "N:1"
+    },
+    {
+      "source_entity": "sales_order_headers",
+      "source_field": "soldToParty",
+      "target_entity": "business_partners",
+      "target_field": "businessPartner",
+      "overlap_values": 8,
+      "source_unique_values": 8,
+      "target_unique_values": 8,
+      "coverage_source": 1.0,
+      "coverage_target": 1.0,
+      "estimated_cardinality": "N:1"
+    },
+    {
+      "source_entity": "sales_order_headers",
+      "source_field": "soldToParty",
+      "target_entity": "customer_company_assignments",
+      "target_field": "customer",
+      "overlap_values": 8,
+      "source_unique_values": 8,
+      "target_unique_values": 8,
+      "coverage_source": 1.0,
+      "coverage_target": 1.0,
+      "estimated_cardinality": "N:1"
+    },
+    {
+      "source_entity": "sales_order_items",
+      "source_field": "salesOrder",
+      "target_entity": "sales_order_headers",
+      "target_field": "salesOrder",
+      "overlap_values": 100,
+      "source_unique_values": 100,
+      "target_unique_values": 100,
+      "coverage_source": 1.0,
+      "coverage_target": 1.0,
+      "estimated_cardinality": "N:1"
+    },
+    {
+      "source_entity": "sales_order_items",
+      "source_field": "material",
+      "target_entity": "product_descriptions",
+      "target_field": "product",
+      "overlap_values": 69,
+      "source_unique_values": 69,
+      "target_unique_values": 69,
+      "coverage_source": 1.0,
+      "coverage_target": 1.0,
+      "estimated_cardinality": "N:1"
+    },
+    {
+      "source_entity": "sales_order_items",
+      "source_field": "material",
+      "target_entity": "products",
+      "target_field": "product",
+      "overlap_values": 69,
+      "source_unique_values": 69,
+      "target_unique_values": 69,
+      "coverage_source": 1.0,
+      "coverage_target": 1.0,
+      "estimated_cardinality": "N:1"
+    },
+    {
+      "source_entity": "sales_order_items",
+      "source_field": "productionPlant",
+      "target_entity": "plants",
+      "target_field": "plant",
+      "overlap_values": 7,
+      "source_unique_values": 7,
+      "target_unique_values": 44,
+      "coverage_source": 1.0,
+      "coverage_target": 0.1590909090909091,
+      "estimated_cardinality": "N:1"
+    },
+    {
+      "source_entity": "sales_order_schedule_lines",
+      "source_field": "salesOrder",
+      "target_entity": "sales_order_headers",
+      "target_field": "salesOrder",
+      "overlap_values": 100,
+      "source_unique_values": 100,
+      "target_unique_values": 100,
+      "coverage_source": 1.0,
+      "coverage_target": 1.0,
+      "estimated_cardinality": "N:1"
+    }
+  ],
+  "generated_at": "2026-03-26T15:25:51.180241Z"
+}
