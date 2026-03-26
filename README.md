@@ -1,3 +1,5 @@
+Important info for FDE_Dodge AI Team: Backend is hosted on Render free tier and may take ~20–30 seconds to wake up on first request.
+
 # AI-Powered ERP O2C Graph Query System
 
 ## 1. Problem Statement
