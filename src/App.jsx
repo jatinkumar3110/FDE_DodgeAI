@@ -1,17 +1,48 @@
-import React, { useEffect, useRef, useState } from "react";
-import GraphView from "./GraphView";
+import React, { Component, Suspense, lazy, useEffect, useRef, useState } from "react";
 import "./styles.css";
 
 const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || "https://fde-dodgeai.onrender.com";
 const QUERY_API_URL = `${API_BASE_URL}/query`;
 const GRAPH_API_URL = `${API_BASE_URL}/graph`;
+const LazyGraphView = lazy(() => import("./GraphView"));
+
+const readLastQuery = () => {
+  try {
+    return localStorage.getItem("erp_last_query") || "";
+  } catch (error) {
+    console.warn("Unable to read last query from localStorage", error);
+    return "";
+  }
+};
+
+class GraphErrorBoundary extends Component {
+  constructor(props) {
+    super(props);
+    this.state = { hasError: false };
+  }
+
+  static getDerivedStateFromError() {
+    return { hasError: true };
+  }
+
+  componentDidCatch(error) {
+    console.error("Graph render failed", error);
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return this.props.fallback;
+    }
+    return this.props.children;
+  }
+}
 
 function App() {
   const [query, setQuery] = useState("");
   const [loading, setLoading] = useState(false);
   const [graphData, setGraphData] = useState(null);
   const [highlightNodeIds, setHighlightNodeIds] = useState([]);
-  const [lastQuery, setLastQuery] = useState(() => localStorage.getItem("erp_last_query") || "");
+  const [lastQuery, setLastQuery] = useState(readLastQuery);
   const [messages, setMessages] = useState([
     {
       id: 1,
@@ -63,7 +94,11 @@ function App() {
       text: userText,
     };
 
-    localStorage.setItem("erp_last_query", userText);
+    try {
+      localStorage.setItem("erp_last_query", userText);
+    } catch (error) {
+      console.warn("Unable to persist last query", error);
+    }
     setLastQuery(userText);
 
     setMessages((prev) => [...prev, userMessage]);
@@ -128,7 +163,23 @@ function App() {
     <div className="app">
       <div className="layout-shell">
         {hasGraph ? (
-          <GraphView apiUrl={GRAPH_API_URL} highlightedNodeIds={highlightNodeIds} />
+          <GraphErrorBoundary
+            fallback={
+              <section className="graph-shell">
+                <div className="graph-state">Graph not available</div>
+              </section>
+            }
+          >
+            <Suspense
+              fallback={
+                <section className="graph-shell">
+                  <div className="graph-state">Loading graph...</div>
+                </section>
+              }
+            >
+              <LazyGraphView apiUrl={GRAPH_API_URL} highlightedNodeIds={highlightNodeIds} />
+            </Suspense>
+          </GraphErrorBoundary>
         ) : (
           <section className="graph-shell">
             <div className="graph-state">Graph not available</div>
