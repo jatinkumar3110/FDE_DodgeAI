@@ -389,7 +389,13 @@ def execute_query(graph: Any, parsed_query: JSONDict) -> JSONDict:
     if intent == "find_journal":
         invoice_id = parsed_query.get("invoice_id")
         if not invoice_id:
-            return _attach_plan({"ok": False, "message": "invoice_id is required", "data": {}})
+            return _attach_plan(
+                {
+                    "ok": False,
+                    "message": "Please provide a billing document or invoice ID. Example: 'Find journal for invoice 91150187'",
+                    "data": {},
+                }
+            )
         return _attach_plan(find_journal_by_invoice(graph, str(invoice_id)))
 
     if intent == "trace_order":
@@ -414,7 +420,13 @@ def execute_query(graph: Any, parsed_query: JSONDict) -> JSONDict:
     if intent == "trace_billing":
         invoice_id = parsed_query.get("invoice_id")
         if not invoice_id:
-            return _attach_plan({"ok": False, "message": "invoice_id is required", "data": {}})
+            return _attach_plan(
+                {
+                    "ok": False,
+                    "message": "Please specify invoice ID. Example: Trace billing 91150187",
+                    "data": {},
+                }
+            )
         return _attach_plan(trace_billing(graph, str(invoice_id)))
 
     if intent == "broken_flows":

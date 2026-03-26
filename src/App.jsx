@@ -25,7 +25,7 @@ class GraphErrorBoundary extends Component {
   }
 
   componentDidCatch(error) {
-    console.error("Graph render failed", error);
+    console.error("GraphView crash:", error);
   }
 
   render() {
@@ -40,6 +40,7 @@ function App() {
   const [query, setQuery] = useState("");
   const [loading, setLoading] = useState(false);
   const [graphData, setGraphData] = useState({ nodes: [], links: [] });
+  const [loadingGraph, setLoadingGraph] = useState(true);
   const [highlightNodeIds, setHighlightNodeIds] = useState([]);
   const [lastQuery, setLastQuery] = useState(readLastQuery);
   const [messages, setMessages] = useState([
@@ -59,19 +60,24 @@ function App() {
 
   useEffect(() => {
     const loadGraph = async () => {
+      setLoadingGraph(true);
       try {
+        console.log("Fetching graph...");
         const res = await fetch(GRAPH_API_URL);
         if (!res.ok) {
           throw new Error("Graph request failed");
         }
         const data = await res.json();
+        console.log("Graph API response:", data);
         setGraphData({
           nodes: data?.nodes || [],
           links: data?.links || [],
         });
-      } catch (e) {
-        console.error("Graph load failed", e);
+      } catch (err) {
+        console.error("Graph fetch error:", err);
         setGraphData({ nodes: [], links: [] });
+      } finally {
+        setLoadingGraph(false);
       }
     };
 
@@ -153,37 +159,57 @@ function App() {
     }
   };
 
-  const hasGraph =
-    Array.isArray(graphData?.nodes) &&
-    Array.isArray(graphData?.links) &&
-    (graphData.nodes.length > 0 || graphData.links.length > 0);
+  const renderGraphPanel = () => {
+    if (loadingGraph) {
+      return (
+        <section className="graph-shell">
+          <div className="graph-state">Loading graph...</div>
+        </section>
+      );
+    }
+
+    if (!graphData || graphData.nodes.length === 0) {
+      return (
+        <section className="graph-shell">
+          <div className="graph-state">Graph not available</div>
+        </section>
+      );
+    }
+
+    try {
+      return (
+        <GraphErrorBoundary
+          fallback={
+            <section className="graph-shell">
+              <div className="graph-state">Graph failed to render</div>
+            </section>
+          }
+        >
+          <Suspense
+            fallback={
+              <section className="graph-shell">
+                <div className="graph-state">Loading graph...</div>
+              </section>
+            }
+          >
+            <LazyGraphView apiUrl={GRAPH_API_URL} highlightedNodeIds={highlightNodeIds} />
+          </Suspense>
+        </GraphErrorBoundary>
+      );
+    } catch (error) {
+      console.error("GraphView crash:", error);
+      return (
+        <section className="graph-shell">
+          <div className="graph-state">Graph failed to render</div>
+        </section>
+      );
+    }
+  };
 
   return (
     <div className="app">
       <div className="layout-shell" style={{ gridTemplateColumns: "1.85fr 1fr" }}>
-        {hasGraph ? (
-          <GraphErrorBoundary
-            fallback={
-              <section className="graph-shell">
-                <div className="graph-state">Graph not available</div>
-              </section>
-            }
-          >
-            <Suspense
-              fallback={
-                <section className="graph-shell">
-                  <div className="graph-state">Loading graph...</div>
-                </section>
-              }
-            >
-              <LazyGraphView apiUrl={GRAPH_API_URL} highlightedNodeIds={highlightNodeIds} />
-            </Suspense>
-          </GraphErrorBoundary>
-        ) : (
-          <section className="graph-shell">
-            <div className="graph-state">Graph not available</div>
-          </section>
-        )}
+        {renderGraphPanel()}
 
         <div className="chat-shell">
           <header className="chat-header">ERP Query Chat</header>
