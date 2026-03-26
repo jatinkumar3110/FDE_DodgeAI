@@ -1,45 +1,10 @@
-import React, { useEffect, useMemo, useRef, useState } from "react";
-import { ForceGraph2D } from "react-force-graph";
+import React, { useEffect, useMemo, useState } from "react";
+import ForceGraph2D from "react-force-graph-2d";
 
-const TYPE_COLORS = {
-  Order: "#1d4ed8",
-  OrderItem: "#2563eb",
-  Delivery: "#0f766e",
-  DeliveryItem: "#0d9488",
-  Invoice: "#b45309",
-  InvoiceItem: "#d97706",
-  JournalEntry: "#7c3aed",
-  Payment: "#db2777",
-  Customer: "#059669",
-  Product: "#dc2626",
-  Plant: "#4f46e5",
-  unknown: "#64748b",
-};
-
-function GraphView({ apiUrl, highlightedNodeIds = [] }) {
-  const [graphData, setGraphData] = useState({ nodes: [], links: [] });
+function GraphView({ apiUrl }) {
+  const [data, setData] = useState({ nodes: [], links: [] });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const [size, setSize] = useState({ width: 600, height: 420 });
-
-  const containerRef = useRef(null);
-
-  useEffect(() => {
-    const resize = () => {
-      if (!containerRef.current) {
-        return;
-      }
-      const { clientWidth, clientHeight } = containerRef.current;
-      setSize({
-        width: Math.max(clientWidth, 320),
-        height: Math.max(clientHeight, 280),
-      });
-    };
-
-    resize();
-    window.addEventListener("resize", resize);
-    return () => window.removeEventListener("resize", resize);
-  }, []);
 
   useEffect(() => {
     const controller = new AbortController();
@@ -51,17 +16,19 @@ function GraphView({ apiUrl, highlightedNodeIds = [] }) {
       try {
         const response = await fetch(apiUrl, { signal: controller.signal });
         if (!response.ok) {
-          throw new Error(`Unable to load graph (${response.status})`);
+          throw new Error(`Graph request failed (${response.status})`);
         }
 
         const payload = await response.json();
-        setGraphData({
-          nodes: payload?.nodes || [],
-          links: payload?.links || [],
+        setData({
+          nodes: Array.isArray(payload?.nodes) ? payload.nodes : [],
+          links: Array.isArray(payload?.links) ? payload.links : [],
         });
-      } catch (loadError) {
-        if (loadError.name !== "AbortError") {
-          setError("Graph is unavailable");
+      } catch (err) {
+        if (err.name !== "AbortError") {
+          console.error("Graph fetch error:", err);
+          setError("Graph not available");
+          setData({ nodes: [], links: [] });
         }
       } finally {
         setLoading(false);
@@ -72,30 +39,20 @@ function GraphView({ apiUrl, highlightedNodeIds = [] }) {
     return () => controller.abort();
   }, [apiUrl]);
 
-  const safeGraphData = useMemo(() => {
-    const nodes = Array.isArray(graphData?.nodes)
-      ? graphData.nodes
-          .filter((node) => node && node.id !== undefined && node.id !== null)
-          .map((node) => ({
-            id: String(node.id),
-            label: node.label || String(node.id),
-            type: node.type || "unknown",
-          }))
-      : [];
-
-    const links = Array.isArray(graphData?.links)
-      ? graphData.links
-          .filter((link) => link && link.source !== undefined && link.target !== undefined)
-          .map((link) => ({
-            source: String(link.source),
-            target: String(link.target),
-          }))
-      : [];
-
-    return { nodes, links };
-  }, [graphData]);
-
-  const highlightSet = useMemo(() => new Set((highlightedNodeIds || []).map(String)), [highlightedNodeIds]);
+  const safeGraph = useMemo(() => {
+    return {
+      nodes: data.nodes.map((n, i) => ({
+        id: String(n?.id || i),
+        label: String(n?.label || n?.id || i),
+      })),
+      links: data.links
+        .filter((l) => l && l.source !== undefined && l.target !== undefined)
+        .map((l) => ({
+          source: String(l.source),
+          target: String(l.target),
+        })),
+    };
+  }, [data]);
 
   if (loading) {
     return (
@@ -108,12 +65,12 @@ function GraphView({ apiUrl, highlightedNodeIds = [] }) {
   if (error) {
     return (
       <section className="graph-shell">
-        <div className="graph-state error">{error}</div>
+        <div className="graph-state">{error}</div>
       </section>
     );
   }
 
-  if (!safeGraphData.nodes.length) {
+  if (!safeGraph.nodes.length) {
     return (
       <section className="graph-shell">
         <div className="graph-state">No graph data</div>
@@ -124,54 +81,14 @@ function GraphView({ apiUrl, highlightedNodeIds = [] }) {
   try {
     return (
       <section className="graph-shell">
-        <div className="graph-header">
-          <h2>O2C Graph</h2>
-          <span>
-            Nodes {safeGraphData.nodes.length} | Links {safeGraphData.links.length}
-          </span>
-        </div>
-
-        <div className="graph-canvas" ref={containerRef}>
-          <ForceGraph2D
-            width={size.width}
-            height={size.height}
-            graphData={safeGraphData}
-            nodeLabel="label"
-            nodeColor={(node) => {
-              const base = TYPE_COLORS[node.type] || TYPE_COLORS.unknown;
-              if (highlightSet.size === 0) {
-                return base;
-              }
-              return highlightSet.has(String(node.id)) ? base : "#cbd5e1";
-            }}
-            linkColor={(link) => {
-              if (highlightSet.size === 0) {
-                return "#d1d5db";
-              }
-              const sourceId = String(link.source?.id ?? link.source);
-              const targetId = String(link.target?.id ?? link.target);
-              return highlightSet.has(sourceId) && highlightSet.has(targetId) ? "#1d4ed8" : "#d1d5db";
-            }}
-            linkWidth={(link) => {
-              if (highlightSet.size === 0) {
-                return 1;
-              }
-              const sourceId = String(link.source?.id ?? link.source);
-              const targetId = String(link.target?.id ?? link.target);
-              return highlightSet.has(sourceId) && highlightSet.has(targetId) ? 2.2 : 0.8;
-            }}
-            cooldownTicks={80}
-            enablePanInteraction
-            enableZoomInteraction
-          />
-        </div>
+        <ForceGraph2D graphData={safeGraph} nodeLabel="label" />
       </section>
     );
   } catch (e) {
     console.error("Graph render error:", e);
     return (
       <section className="graph-shell">
-        <div className="graph-state error">Graph failed</div>
+        <div className="graph-state">Graph failed</div>
       </section>
     );
   }
