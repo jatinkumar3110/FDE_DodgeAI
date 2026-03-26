@@ -39,6 +39,7 @@ class GraphErrorBoundary extends Component {
 function App() {
   const [query, setQuery] = useState("");
   const [loading, setLoading] = useState(false);
+  const [queryError, setQueryError] = useState("");
   const [graphData, setGraphData] = useState({ nodes: [], links: [] });
   const [loadingGraph, setLoadingGraph] = useState(true);
   const [highlightNodeIds, setHighlightNodeIds] = useState([]);
@@ -111,6 +112,7 @@ function App() {
 
     setMessages((prev) => [...prev, userMessage]);
     setQuery("");
+    setQueryError("");
     setLoading(true);
 
     const start = performance.now();
@@ -146,6 +148,7 @@ function App() {
       setMessages((prev) => [...prev, systemMessage]);
     } catch (error) {
       setHighlightNodeIds([]);
+      setQueryError(error?.message || "Unable to process your request right now.");
       setMessages((prev) => [
         ...prev,
         {
@@ -192,7 +195,7 @@ function App() {
               </section>
             }
           >
-            <LazyGraphView apiUrl={GRAPH_API_URL} highlightedNodeIds={highlightNodeIds} />
+            <LazyGraphView graphData={graphData} highlightedNodeIds={highlightNodeIds} />
           </Suspense>
         </GraphErrorBoundary>
       );
@@ -208,13 +211,19 @@ function App() {
 
   return (
     <div className="app">
-      <div className="layout-shell" style={{ gridTemplateColumns: "1.85fr 1fr" }}>
+      <div className="layout-shell" style={{ gridTemplateColumns: "1.86fr 1fr" }}>
         {renderGraphPanel()}
 
         <div className="chat-shell">
           <header className="chat-header">ERP Query Chat</header>
 
           {lastQuery ? <div className="chat-last-query">Last query: {lastQuery}</div> : null}
+
+          {queryError ? (
+            <div className="chat-last-query" style={{ color: "#b91c1c", background: "#fff1f2" }}>
+              Error: {queryError}
+            </div>
+          ) : null}
 
           <div className="chat-history">
             {messages.map((message) => (
@@ -274,7 +283,7 @@ function App() {
               <div className="message-row system">
                 <div className="message-bubble">
                   <div className="message-role">System</div>
-                  <div className="message-text">Processing...</div>
+                  <div className="message-text">Processing query...</div>
                 </div>
               </div>
             )}

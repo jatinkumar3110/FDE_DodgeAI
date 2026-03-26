@@ -4,17 +4,20 @@ import json
 import os
 import re
 from difflib import SequenceMatcher
-from typing import Any, Dict, Optional
+from typing import Any, Dict, List, Optional
 from urllib.error import HTTPError, URLError
 from urllib.request import Request, urlopen
 
 from query_engine import (
+    count_flow_entities,
     find_broken_flows,
     find_journal_by_invoice,
     find_orders_without_invoice,
     top_products_by_billing,
     trace_billing,
+    trace_invoice_backward,
     trace_order_flow,
+    trace_order_full,
 )
 from query_planner import plan_query
 
@@ -30,6 +33,10 @@ ALLOWED_INTENTS = {
     "top_products",
     "trace_billing",
     "broken_flows",
+    "trace_order_full",
+    "trace_invoice_backward",
+    "count_flow_entities",
+    "multi_condition_query",
 }
 
 INTENT_PHRASES = {
@@ -44,6 +51,24 @@ INTENT_PHRASES = {
         "order flow",
         "order lifecycle",
         "order to cash trace",
+    ],
+    "trace_order_full": [
+        "trace order full",
+        "trace full order",
+        "end to end order",
+        "full order journey",
+    ],
+    "trace_invoice_backward": [
+        "originating order",
+        "trace backward",
+        "invoice backward trace",
+        "invoice to order",
+    ],
+    "count_flow_entities": [
+        "how many deliveries",
+        "count invoices",
+        "count deliveries and invoices",
+        "delivery and invoice count",
     ],
     "orders_without_invoice": [
         "orders without invoice",
@@ -102,20 +127,22 @@ def _is_rejected_query(user_query: str) -> bool:
     if not normalized:
         return True
 
-    erp_keywords = {
+    allowed_keywords = {
         "order",
+        "orders",
         "invoice",
-        "journal",
-        "payment",
+        "invoices",
         "delivery",
-        "product",
+        "deliveries",
         "billing",
-        "customer",
-        "flow",
-        "erp",
+        "product",
+        "products",
+        "payment",
+        "payments",
+        "journal",
     }
     tokens = set(normalized.split())
-    return len(tokens.intersection(erp_keywords)) == 0
+    return len(tokens.intersection(allowed_keywords)) == 0
 
 
 def _extract_identifier(text: str) -> Optional[str]:
@@ -140,6 +167,18 @@ def _similarity_score(left: str, right: str) -> float:
     return SequenceMatcher(None, left, right).ratio()
 
 
+def _split_multi_query(user_query: str) -> List[str]:
+    text = user_query.strip()
+    if not text or " and " not in text.lower():
+        return []
+
+    parts = [part.strip(" ,.;") for part in re.split(r"\band\b", text, flags=re.IGNORECASE)]
+    parts = [part for part in parts if part]
+    if len(parts) < 2:
+        return []
+    return parts
+
+
 def _heuristic_parse(user_query: str) -> JSONDict:
     q = _normalize_text(user_query)
 
@@ -148,10 +187,24 @@ def _heuristic_parse(user_query: str) -> JSONDict:
         if invoice:
             return {"intent": "find_journal", "invoice_id": invoice}
 
-    if "trace" in q and "order" in q:
+    if ("trace" in q and "order" in q) or "trace order" in q:
         order_id = _extract_identifier(user_query)
         if order_id:
+            if "full" in q or "end to end" in q:
+                return {"intent": "trace_order_full", "order_id": order_id}
             return {"intent": "trace_order", "order_id": order_id}
+
+    if "trace" in q and ("backward" in q or "originating" in q) and "invoice" in q:
+        invoice_id = _extract_identifier(user_query)
+        if invoice_id:
+            return {"intent": "trace_invoice_backward", "invoice_id": invoice_id}
+
+    if ("how many" in q or "count" in q) and (
+        "delivery" in q or "deliveries" in q or "invoice" in q or "invoices" in q
+    ):
+        order_id = _extract_identifier(user_query)
+        if order_id:
+            return {"intent": "count_flow_entities", "order_id": order_id}
 
     if "trace" in q and ("billing" in q or "invoice" in q or "flow" in q):
         invoice_id = _extract_identifier(user_query)
@@ -176,12 +229,6 @@ def _heuristic_parse(user_query: str) -> JSONDict:
             out["limit"] = limit
         return out
 
-    if "most invoices" in q and "product" in q:
-        return {"intent": "top_products"}
-
-    if "broken orders" in q:
-        return {"intent": "broken_flows", "type": "delivered_not_billed"}
-
     return {"intent": "unknown"}
 
 
@@ -192,6 +239,19 @@ def _keyword_similarity_parse(user_query: str) -> JSONDict:
 
     best_intent = "unknown"
     best_score = 0.0
+
+    # Explicit semantic mappings first.
+    if "how many deliveries" in normalized_query or "count invoices" in normalized_query:
+        order_id = _extract_identifier(user_query)
+        return {"intent": "count_flow_entities", "order_id": order_id} if order_id else {"intent": "unknown"}
+
+    if "trace order" in normalized_query:
+        order_id = _extract_identifier(user_query)
+        return {"intent": "trace_order_full", "order_id": order_id} if order_id else {"intent": "unknown"}
+
+    if "originating order" in normalized_query or "trace backward" in normalized_query:
+        invoice_id = _extract_identifier(user_query)
+        return {"intent": "trace_invoice_backward", "invoice_id": invoice_id} if invoice_id else {"intent": "unknown"}
 
     for intent, phrases in INTENT_PHRASES.items():
         for phrase in phrases:
@@ -209,9 +269,17 @@ def _keyword_similarity_parse(user_query: str) -> JSONDict:
         invoice_id = _extract_identifier(user_query)
         return {"intent": "find_journal", "invoice_id": invoice_id} if invoice_id else {"intent": "unknown"}
 
-    if best_intent == "trace_order":
+    if best_intent in {"trace_order", "trace_order_full"}:
         order_id = _extract_identifier(user_query)
-        return {"intent": "trace_order", "order_id": order_id} if order_id else {"intent": "unknown"}
+        return {"intent": best_intent, "order_id": order_id} if order_id else {"intent": "unknown"}
+
+    if best_intent == "trace_invoice_backward":
+        invoice_id = _extract_identifier(user_query)
+        return {"intent": "trace_invoice_backward", "invoice_id": invoice_id} if invoice_id else {"intent": "unknown"}
+
+    if best_intent == "count_flow_entities":
+        order_id = _extract_identifier(user_query)
+        return {"intent": "count_flow_entities", "order_id": order_id} if order_id else {"intent": "unknown"}
 
     if best_intent == "trace_billing":
         invoice_id = _extract_identifier(user_query)
@@ -256,6 +324,8 @@ def _sanitize_parsed(parsed: Optional[JSONDict]) -> JSONDict:
             clean["limit"] = int(parsed.get("limit"))
         except (TypeError, ValueError):
             pass
+    if parsed.get("queries") is not None and isinstance(parsed.get("queries"), list):
+        clean["queries"] = [q for q in parsed.get("queries") if isinstance(q, dict)]
     return clean
 
 
@@ -319,35 +389,25 @@ STRICT RULES:
 Allowed intents:
 1. find_journal -> requires invoice_id
 2. trace_order -> requires order_id
-3. orders_without_invoice -> no params
-4. top_products -> optional limit
-5. trace_billing -> requires invoice_id when present in query
-6. broken_flows -> requires type:
+3. trace_order_full -> requires order_id
+4. trace_invoice_backward -> requires invoice_id
+5. count_flow_entities -> requires order_id
+6. orders_without_invoice -> no params
+7. top_products -> optional limit
+8. trace_billing -> requires invoice_id when present in query
+9. broken_flows -> requires type:
     - delivered_not_billed
     - billed_without_delivery
 
 If query is unrelated -> return:
 {{"intent": "unknown"}}
 
-Examples:
-Query: Which products have highest billing
-Output: {{"intent": "top_products"}}
-
-Query: show invoice flow
-Output: {{"intent": "trace_billing"}}
-
 User Query:
 {user_query}
 """
 
 
-def parse_query(user_query: str, provider: str = "groq") -> JSONDict:
-    if _is_rejected_query(user_query):
-        return {
-            "intent": "rejected",
-            "message": GUARDRAIL_MESSAGE,
-        }
-
+def _parse_single_query(user_query: str, provider: str = "groq") -> JSONDict:
     parsed: Optional[JSONDict] = None
     provider_norm = (provider or "").strip().lower()
 
@@ -367,8 +427,27 @@ def parse_query(user_query: str, provider: str = "groq") -> JSONDict:
     return sanitized
 
 
+def parse_query(user_query: str, provider: str = "groq") -> JSONDict:
+    if _is_rejected_query(user_query):
+        return {
+            "intent": "rejected",
+            "message": GUARDRAIL_MESSAGE,
+        }
+
+    parts = _split_multi_query(user_query)
+    if parts:
+        parsed_parts = [_parse_single_query(part, provider=provider) for part in parts]
+        parsed_parts = [part for part in parsed_parts if part.get("intent") not in {"unknown", "rejected"}]
+        if len(parsed_parts) >= 2:
+            return {
+                "intent": "multi_condition_query",
+                "queries": parsed_parts,
+            }
+
+    return _parse_single_query(user_query, provider=provider)
+
+
 def execute_query(graph: Any, parsed_query: JSONDict) -> JSONDict:
-    intent = (parsed_query or {}).get("intent")
     query_plan = plan_query(parsed_query)
 
     def _attach_plan(result: JSONDict) -> JSONDict:
@@ -379,69 +458,133 @@ def execute_query(graph: Any, parsed_query: JSONDict) -> JSONDict:
         result["data"] = data
         return result
 
-    if intent == "rejected":
-        return _attach_plan({
-            "ok": False,
-            "message": GUARDRAIL_MESSAGE,
-            "data": {},
-        })
+    def _execute_single(single_query: JSONDict) -> JSONDict:
+        intent = (single_query or {}).get("intent")
 
-    if intent == "find_journal":
-        invoice_id = parsed_query.get("invoice_id")
-        if not invoice_id:
-            return _attach_plan(
-                {
+        if intent == "rejected":
+            return {
+                "ok": False,
+                "message": GUARDRAIL_MESSAGE,
+                "data": {},
+            }
+
+        if intent == "find_journal":
+            invoice_id = single_query.get("invoice_id")
+            if not invoice_id:
+                return {
                     "ok": False,
                     "message": "Please provide a billing document or invoice ID. Example: 'Find journal for invoice 91150187'",
                     "data": {},
                 }
-            )
-        return _attach_plan(find_journal_by_invoice(graph, str(invoice_id)))
+            return find_journal_by_invoice(graph, str(invoice_id))
 
-    if intent == "trace_order":
-        order_id = parsed_query.get("order_id")
-        if not order_id:
-            return _attach_plan({"ok": False, "message": "order_id is required", "data": {}})
-        return _attach_plan(trace_order_flow(graph, str(order_id)))
+        if intent in {"trace_order", "trace_order_full"}:
+            order_id = single_query.get("order_id")
+            if not order_id:
+                return {"ok": False, "message": "order_id is required", "data": {}}
+            if intent == "trace_order_full":
+                return trace_order_full(graph, str(order_id))
+            return trace_order_flow(graph, str(order_id))
 
-    if intent == "orders_without_invoice":
-        return _attach_plan(find_orders_without_invoice(graph))
+        if intent == "trace_invoice_backward":
+            invoice_id = single_query.get("invoice_id")
+            if not invoice_id:
+                return {
+                    "ok": False,
+                    "message": "Please specify invoice ID. Example: Trace invoice backward 91150187",
+                    "data": {},
+                }
+            return trace_invoice_backward(graph, str(invoice_id))
 
-    if intent == "top_products":
-        raw_limit = parsed_query.get("limit", 5)
-        try:
-            limit = int(raw_limit)
-        except (TypeError, ValueError):
-            limit = 5
-        if limit < 1:
-            limit = 5
-        return _attach_plan(top_products_by_billing(graph, limit=limit))
+        if intent == "count_flow_entities":
+            order_id = single_query.get("order_id")
+            if not order_id:
+                return {
+                    "ok": False,
+                    "message": "Please specify order ID. Example: How many deliveries and invoices for order 4745",
+                    "data": {},
+                }
+            return count_flow_entities(graph, str(order_id))
 
-    if intent == "trace_billing":
-        invoice_id = parsed_query.get("invoice_id")
-        if not invoice_id:
-            return _attach_plan(
-                {
+        if intent == "orders_without_invoice":
+            return find_orders_without_invoice(graph)
+
+        if intent == "top_products":
+            raw_limit = single_query.get("limit", 5)
+            try:
+                limit = int(raw_limit)
+            except (TypeError, ValueError):
+                limit = 5
+            if limit < 1:
+                limit = 5
+            return top_products_by_billing(graph, limit=limit)
+
+        if intent == "trace_billing":
+            invoice_id = single_query.get("invoice_id")
+            if not invoice_id:
+                return {
                     "ok": False,
                     "message": "Please specify invoice ID. Example: Trace billing 91150187",
                     "data": {},
                 }
-            )
-        return _attach_plan(trace_billing(graph, str(invoice_id)))
+            return trace_billing(graph, str(invoice_id))
 
-    if intent == "broken_flows":
-        flow_type = parsed_query.get("type")
-        if flow_type not in {"delivered_not_billed", "billed_without_delivery"}:
-            return _attach_plan(
-                {
+        if intent == "broken_flows":
+            flow_type = single_query.get("type")
+            if flow_type not in {"delivered_not_billed", "billed_without_delivery"}:
+                return {
                     "ok": False,
                     "message": "type must be delivered_not_billed or billed_without_delivery",
                     "data": {},
                 }
-            )
-        return _attach_plan(find_broken_flows(graph, str(flow_type)))
+            return find_broken_flows(graph, str(flow_type))
 
-    return _attach_plan({"ok": False, "message": GUARDRAIL_MESSAGE, "data": {}})
+        return {"ok": False, "message": GUARDRAIL_MESSAGE, "data": {}}
+
+    intent = (parsed_query or {}).get("intent")
+    if intent == "multi_condition_query":
+        queries = parsed_query.get("queries") if isinstance(parsed_query, dict) else None
+        if not isinstance(queries, list) or len(queries) < 2:
+            return _attach_plan({"ok": False, "message": "No valid sub-queries found", "data": {}})
+
+        sub_results: List[JSONDict] = []
+        merged_highlight_nodes: List[str] = []
+        all_ok = True
+
+        for index, query_part in enumerate(queries):
+            result = _execute_single(query_part)
+            sub_results.append(
+                {
+                    "index": index + 1,
+                    "parsed_query": query_part,
+                    "result": result,
+                }
+            )
+            if not result.get("ok"):
+                all_ok = False
+            result_nodes = result.get("data", {}).get("highlight_nodes", [])
+            if isinstance(result_nodes, list):
+                merged_highlight_nodes.extend(str(node) for node in result_nodes)
+
+        # Preserve order while deduplicating for deterministic rendering.
+        dedup_highlights: List[str] = []
+        seen = set()
+        for node in merged_highlight_nodes:
+            if node in seen:
+                continue
+            seen.add(node)
+            dedup_highlights.append(node)
+
+        merged_payload = {
+            "sub_results": sub_results,
+            "sub_query_count": len(sub_results),
+            "highlight_nodes": dedup_highlights,
+            "highlight_node_count": len(dedup_highlights),
+        }
+        status_message = "Multi-condition query executed" if all_ok else "Multi-condition query partially completed"
+        return _attach_plan({"ok": all_ok, "message": status_message, "data": merged_payload})
+
+    return _attach_plan(_execute_single(parsed_query))
 
 
 def format_response(parsed_query: JSONDict, execution_result: JSONDict) -> str:
@@ -463,15 +606,27 @@ def format_response(parsed_query: JSONDict, execution_result: JSONDict) -> str:
         invoice_id = data.get("invoice_id")
         journals = data.get("journal_entries", [])
         if not journals:
-            return f"Invoice {invoice_id} has no journal entries in this dataset."
+            return f"No journal entries found for invoice {invoice_id} in this dataset."
         ids = [entry.get("accountingDocument") for entry in journals if entry.get("accountingDocument")]
         return f"Invoice {invoice_id} maps to {len(journals)} journal entr{'y' if len(journals) == 1 else 'ies'}: {', '.join(ids)}."
 
-    if intent == "trace_order":
+    if intent in {"trace_order", "trace_order_full"}:
         return (
             f"Order {data.get('order_id')} has {data.get('delivery_count', 0)} deliveries, "
             f"{data.get('invoice_count', 0)} invoices, {data.get('journal_count', 0)} journals, "
             f"and {data.get('payment_count', 0)} payments."
+        )
+
+    if intent == "trace_invoice_backward":
+        return (
+            f"Invoice {data.get('invoice_id')} maps backward to {data.get('order_count', 0)} orders "
+            f"through {data.get('delivery_count', 0)} deliveries."
+        )
+
+    if intent == "count_flow_entities":
+        return (
+            f"Order {data.get('order_id')} has {data.get('deliveries', 0)} deliveries "
+            f"and {data.get('invoices', 0)} invoices."
         )
 
     if intent == "orders_without_invoice":
@@ -499,5 +654,10 @@ def format_response(parsed_query: JSONDict, execution_result: JSONDict) -> str:
         flow_type = data.get("type")
         count = data.get("count", 0)
         return f"Detected {count} issue item{'s' if count != 1 else ''} for broken flow type '{flow_type}'."
+
+    if intent == "multi_condition_query":
+        sub_results = data.get("sub_results", [])
+        completed = sum(1 for row in sub_results if row.get("result", {}).get("ok"))
+        return f"Executed {completed}/{len(sub_results)} requested conditions and merged the results."
 
     return GUARDRAIL_MESSAGE

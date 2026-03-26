@@ -40,7 +40,7 @@ def _query_plan_description(plan: Dict[str, Any]) -> str:
 
 def _is_follow_up_query(user_query: str) -> bool:
     q = (user_query or "").strip().lower()
-    follow_up_markers = ["this", "that", "same", "previous", "again", "it", "them", "those"]
+    follow_up_markers = ["this", "that", "same", "previous", "again", "it", "its", "them", "those"]
     return any(token in q.split() for token in follow_up_markers)
 
 
@@ -60,6 +60,14 @@ def _apply_follow_up_memory(parsed_query: Dict[str, Any], user_query: str) -> Di
         for key in ("order_id", "invoice_id", "type", "limit"):
             if merged.get(key) is None and LAST_PARSED_QUERY.get(key) is not None:
                 merged[key] = LAST_PARSED_QUERY[key]
+        return merged
+
+    if _is_follow_up_query(user_query):
+        merged = dict(parsed_query)
+        if merged.get("invoice_id") is None and LAST_PARSED_QUERY.get("invoice_id") is not None:
+            merged["invoice_id"] = LAST_PARSED_QUERY.get("invoice_id")
+        if merged.get("order_id") is None and LAST_PARSED_QUERY.get("order_id") is not None:
+            merged["order_id"] = LAST_PARSED_QUERY.get("order_id")
         return merged
 
     return parsed_query

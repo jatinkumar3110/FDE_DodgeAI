@@ -30,6 +30,35 @@ def plan_query(parsed_query: JSONDict) -> JSONDict:
             "mode": "order_to_cash",
         }
 
+    if intent == "trace_order_full":
+        return {
+            "type": "traversal",
+            "entity": "Order",
+            "start": "Order",
+            "end": "Payment",
+            "path": ["Order", "Delivery", "Invoice", "JournalEntry", "Payment"],
+            "mode": "order_to_cash_full",
+        }
+
+    if intent == "trace_invoice_backward":
+        return {
+            "type": "traversal",
+            "entity": "Invoice",
+            "start": "Invoice",
+            "end": "Order",
+            "path": ["Invoice", "Delivery", "Order"],
+            "mode": "invoice_to_origin_order",
+        }
+
+    if intent == "count_flow_entities":
+        return {
+            "type": "aggregation",
+            "entity": "Order",
+            "group_by": "order_id",
+            "metric": "delivery_count,invoice_count",
+            "mode": "flow_entity_count",
+        }
+
     if intent == "orders_without_invoice":
         return {
             "type": "anomaly_detection",
@@ -64,6 +93,14 @@ def plan_query(parsed_query: JSONDict) -> JSONDict:
             "entity": "DeliveryItem|InvoiceItem",
             "condition": parsed_query.get("type", "unknown"),
             "severity": "medium",
+        }
+
+    if intent == "multi_condition_query":
+        return {
+            "type": "traversal",
+            "entity": "Composite",
+            "mode": "multi_condition",
+            "conditions": len(parsed_query.get("queries", [])) if isinstance(parsed_query, dict) else 0,
         }
 
     return {
