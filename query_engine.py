@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from collections import Counter
-from typing import Any, Dict, Iterable, List, Optional, Sequence, Set, Tuple
+from typing import Any, Dict, List, Optional, Sequence, Set
 
 import networkx as nx
 
@@ -73,6 +73,57 @@ def _invoice_item_nodes_for_delivery_item(graph: nx.DiGraph, delivery_item_node:
     return _safe_successors_by_relation(graph, delivery_item_node, "BILLED_IN")
 
 
+def _dedupe_preserve(items: Sequence[str]) -> List[str]:
+    seen: Set[str] = set()
+    output: List[str] = []
+    for item in items:
+        if item in seen:
+            continue
+        seen.add(item)
+        output.append(item)
+    return output
+
+
+def _node_visual_metadata(graph: nx.DiGraph, node_id: str) -> JSONDict:
+    attrs = graph.nodes.get(node_id, {})
+    return {
+        "id": node_id,
+        "type": attrs.get("node_type", "Unknown"),
+        "label": attrs.get("key") or node_id,
+        "source_entity": attrs.get("source_entity"),
+    }
+
+
+def _graph_path_payload(graph: nx.DiGraph, nodes: Sequence[str], edge_limit: int = 500) -> JSONDict:
+    node_set = set(nodes)
+    edges: List[JSONDict] = []
+    for source, target, attrs in graph.edges(data=True):
+        if source in node_set and target in node_set:
+            edges.append(
+                {
+                    "source": source,
+                    "target": target,
+                    "relation": attrs.get("relation"),
+                }
+            )
+            if len(edges) >= edge_limit:
+                break
+
+    return {
+        "nodes": list(nodes),
+        "edges": edges,
+    }
+
+
+def _attach_visuals(graph: nx.DiGraph, payload: JSONDict, highlight_nodes: Sequence[str]) -> JSONDict:
+    filtered_nodes = [node for node in _dedupe_preserve(highlight_nodes) if graph.has_node(node)]
+    payload["highlight_nodes"] = filtered_nodes
+    payload["highlight_node_count"] = len(filtered_nodes)
+    payload["highlight_node_metadata"] = [_node_visual_metadata(graph, node) for node in filtered_nodes[:60]]
+    payload["graph_path"] = _graph_path_payload(graph, filtered_nodes)
+    return payload
+
+
 def _json_result(ok: bool, message: str, payload: Optional[JSONDict] = None) -> JSONDict:
     return {
         "ok": ok,
@@ -82,7 +133,6 @@ def _json_result(ok: bool, message: str, payload: Optional[JSONDict] = None) -> 
 
 
 def find_journal_by_invoice(graph: nx.DiGraph, invoice_id: str) -> JSONDict:
-    """Traverse Invoice -> JournalEntry via POSTED_AS."""
     invoice_node = _node_id("Invoice", str(invoice_id))
     if not graph.has_node(invoice_node):
         return _json_result(False, "Invoice not found", {"invoice_id": invoice_id, "journal_entries": []})
@@ -98,27 +148,17 @@ def find_journal_by_invoice(graph: nx.DiGraph, invoice_id: str) -> JSONDict:
             }
         )
 
-    return _json_result(
-        True,
-        "Journal entries retrieved",
-        {
-            "invoice_id": invoice_id,
-            "invoice_node": invoice_node,
-            "journal_count": len(journals),
-            "journal_entries": journals,
-        },
-    )
+    payload = {
+        "invoice_id": str(invoice_id),
+        "invoice_node": invoice_node,
+        "journal_count": len(journals),
+        "journal_entries": journals,
+    }
+    _attach_visuals(graph, payload, [invoice_node, *journal_nodes])
+    return _json_result(True, "Journal entries retrieved", payload)
 
 
 def trace_order_flow(graph: nx.DiGraph, order_id: str) -> JSONDict:
-    """Trace Order -> Delivery -> Invoice -> Journal -> Payment using edge traversal.
-
-    Traversal path in this graph model:
-    Order -HAS_ITEM-> OrderItem -DELIVERED_IN-> DeliveryItem -BILLED_IN-> InvoiceItem
-    InvoiceItem is mapped to Invoice by invoice key prefix in composite node ID.
-    Invoice -POSTED_AS-> JournalEntry
-    Invoice -PAID_BY-> Payment
-    """
     order_node = _node_id("Order", str(order_id))
     if not graph.has_node(order_node):
         return _json_result(False, "Order not found", {"order_id": order_id})
@@ -126,83 +166,94 @@ def trace_order_flow(graph: nx.DiGraph, order_id: str) -> JSONDict:
     order_item_nodes = _order_item_nodes_for_order(graph, order_node)
 
     delivery_item_nodes: Set[str] = set()
-    for oi in order_item_nodes:
-        delivery_item_nodes.update(_delivery_item_nodes_for_order_item(graph, oi))
+    for order_item in order_item_nodes:
+        delivery_item_nodes.update(_delivery_item_nodes_for_order_item(graph, order_item))
 
     delivery_nodes: Set[str] = set()
-    for di in delivery_item_nodes:
-        delivery_id = _extract_key_part(di, 0)
+    for delivery_item in delivery_item_nodes:
+        delivery_id = _extract_key_part(delivery_item, 0)
         if delivery_id:
-            dn = _node_id("Delivery", delivery_id)
-            if graph.has_node(dn):
-                delivery_nodes.add(dn)
+            delivery_node = _node_id("Delivery", delivery_id)
+            if graph.has_node(delivery_node):
+                delivery_nodes.add(delivery_node)
 
     invoice_item_nodes: Set[str] = set()
-    for di in delivery_item_nodes:
-        invoice_item_nodes.update(_invoice_item_nodes_for_delivery_item(graph, di))
+    for delivery_item in delivery_item_nodes:
+        invoice_item_nodes.update(_invoice_item_nodes_for_delivery_item(graph, delivery_item))
 
     invoice_nodes: Set[str] = set()
-    for ii in invoice_item_nodes:
-        inv = _invoice_for_invoice_item(graph, ii)
-        if inv:
-            invoice_nodes.add(inv)
+    for invoice_item in invoice_item_nodes:
+        invoice_node = _invoice_for_invoice_item(graph, invoice_item)
+        if invoice_node:
+            invoice_nodes.add(invoice_node)
 
     journal_nodes: Set[str] = set()
     payment_nodes: Set[str] = set()
-    for inv in invoice_nodes:
-        journal_nodes.update(_safe_successors_by_relation(graph, inv, "POSTED_AS"))
-        payment_nodes.update(_safe_successors_by_relation(graph, inv, "PAID_BY"))
+    for invoice_node in invoice_nodes:
+        journal_nodes.update(_safe_successors_by_relation(graph, invoice_node, "POSTED_AS"))
+        payment_nodes.update(_safe_successors_by_relation(graph, invoice_node, "PAID_BY"))
 
-    return _json_result(
-        True,
-        "Order flow traced",
-        {
-            "order_id": order_id,
-            "order_node": order_node,
-            "order_item_count": len(order_item_nodes),
-            "delivery_count": len(delivery_nodes),
-            "invoice_count": len(invoice_nodes),
-            "journal_count": len(journal_nodes),
-            "payment_count": len(payment_nodes),
-            "order_items": sorted(order_item_nodes),
-            "deliveries": sorted(delivery_nodes),
-            "delivery_items": sorted(delivery_item_nodes),
-            "invoices": sorted(invoice_nodes),
-            "invoice_items": sorted(invoice_item_nodes),
-            "journals": sorted(journal_nodes),
-            "payments": sorted(payment_nodes),
-        },
-    )
+    highlight_nodes = [
+        order_node,
+        *sorted(order_item_nodes),
+        *sorted(delivery_nodes),
+        *sorted(delivery_item_nodes),
+        *sorted(invoice_nodes),
+        *sorted(invoice_item_nodes),
+        *sorted(journal_nodes),
+        *sorted(payment_nodes),
+    ]
+
+    payload = {
+        "order_id": str(order_id),
+        "order_node": order_node,
+        "flow_path": "Order -> Delivery -> Invoice -> JournalEntry -> Payment",
+        "order_item_count": len(order_item_nodes),
+        "delivery_count": len(delivery_nodes),
+        "invoice_count": len(invoice_nodes),
+        "journal_count": len(journal_nodes),
+        "payment_count": len(payment_nodes),
+        "order_items": sorted(order_item_nodes),
+        "deliveries": sorted(delivery_nodes),
+        "delivery_items": sorted(delivery_item_nodes),
+        "invoices": sorted(invoice_nodes),
+        "invoice_items": sorted(invoice_item_nodes),
+        "journals": sorted(journal_nodes),
+        "payments": sorted(payment_nodes),
+    }
+    _attach_visuals(graph, payload, highlight_nodes)
+    return _json_result(True, "Order flow traced", payload)
 
 
 def find_orders_without_invoice(graph: nx.DiGraph) -> JSONDict:
-    """Find orders that have delivery but no invoice."""
     order_nodes = [n for n, attrs in graph.nodes(data=True) if attrs.get("node_type") == "Order"]
 
     results: List[JSONDict] = []
+    highlight_nodes: List[str] = []
+
     for order_node in order_nodes:
         order_id = _extract_key_part(order_node, 0)
         order_item_nodes = _order_item_nodes_for_order(graph, order_node)
 
         delivery_item_nodes: Set[str] = set()
-        for oi in order_item_nodes:
-            delivery_item_nodes.update(_delivery_item_nodes_for_order_item(graph, oi))
+        for order_item in order_item_nodes:
+            delivery_item_nodes.update(_delivery_item_nodes_for_order_item(graph, order_item))
 
         has_delivery = len(delivery_item_nodes) > 0
         has_invoice = False
 
         if has_delivery:
-            for di in delivery_item_nodes:
-                if _invoice_item_nodes_for_delivery_item(graph, di):
+            for delivery_item in delivery_item_nodes:
+                if _invoice_item_nodes_for_delivery_item(graph, delivery_item):
                     has_invoice = True
                     break
 
         if has_delivery and not has_invoice:
             delivery_ids = sorted(
                 {
-                    _extract_key_part(di, 0)
-                    for di in delivery_item_nodes
-                    if _extract_key_part(di, 0) is not None
+                    _extract_key_part(delivery_item, 0)
+                    for delivery_item in delivery_item_nodes
+                    if _extract_key_part(delivery_item, 0) is not None
                 }
             )
             results.append(
@@ -213,23 +264,18 @@ def find_orders_without_invoice(graph: nx.DiGraph) -> JSONDict:
                     "delivery_item_count": len(delivery_item_nodes),
                 }
             )
+            highlight_nodes.append(order_node)
+            highlight_nodes.extend(sorted(delivery_item_nodes))
 
-    return _json_result(
-        True,
-        "Orders with delivery but no invoice retrieved",
-        {
-            "count": len(results),
-            "orders": sorted(results, key=lambda x: x.get("order_id") or ""),
-        },
-    )
+    payload = {
+        "count": len(results),
+        "orders": sorted(results, key=lambda row: row.get("order_id") or ""),
+    }
+    _attach_visuals(graph, payload, highlight_nodes[:300])
+    return _json_result(True, "Orders with delivery but no invoice retrieved", payload)
 
 
 def top_products_by_billing(graph: nx.DiGraph, limit: int = 5) -> JSONDict:
-    """Count product frequency in invoiced items.
-
-    Traversal:
-    InvoiceItem <-BILLED_IN- DeliveryItem <-DELIVERED_IN- OrderItem -OF_PRODUCT-> Product
-    """
     invoice_item_nodes = [n for n, attrs in graph.nodes(data=True) if attrs.get("node_type") == "InvoiceItem"]
 
     product_counter: Counter[str] = Counter()
@@ -256,154 +302,148 @@ def top_products_by_billing(graph: nx.DiGraph, limit: int = 5) -> JSONDict:
             product_counter[product_id] += 1
 
     ranked = product_counter.most_common(max(limit, 0))
-    top_products = [
-        {
-            "product_id": product_id,
-            "invoice_line_count": count,
-            "product_node": _node_id("Product", product_id),
-            "product_attributes": _get_node_data(graph, _node_id("Product", product_id)),
-        }
-        for product_id, count in ranked
-    ]
+    top_products: List[JSONDict] = []
+    highlight_nodes: List[str] = []
+    for product_id, count in ranked:
+        product_node = _node_id("Product", product_id)
+        highlight_nodes.append(product_node)
+        top_products.append(
+            {
+                "product_id": product_id,
+                "invoice_line_count": count,
+                "product_node": product_node,
+                "product_attributes": _get_node_data(graph, product_node),
+            }
+        )
 
-    return _json_result(
-        True,
-        "Top products by billed frequency retrieved",
-        {
-            "limit": limit,
-            "invoice_item_count": len(invoice_item_nodes),
-            "resolved_invoice_item_count": len(invoice_item_nodes) - unresolved_invoice_items,
-            "unresolved_invoice_item_count": unresolved_invoice_items,
-            "top_products": top_products,
-        },
-    )
+    payload = {
+        "limit": limit,
+        "invoice_item_count": len(invoice_item_nodes),
+        "resolved_invoice_item_count": len(invoice_item_nodes) - unresolved_invoice_items,
+        "unresolved_invoice_item_count": unresolved_invoice_items,
+        "top_products": top_products,
+    }
+    _attach_visuals(graph, payload, highlight_nodes)
+    return _json_result(True, "Top products by billed frequency retrieved", payload)
 
 
 def trace_billing(graph: nx.DiGraph, invoice_id: str) -> JSONDict:
-    """Trace Invoice -> Delivery -> Order and Invoice -> Journal/Payment."""
     invoice_node = _node_id("Invoice", str(invoice_id))
     if not graph.has_node(invoice_node):
         return _json_result(False, "Invoice not found", {"invoice_id": invoice_id})
 
     invoice_item_nodes = [
-        n
-        for n, attrs in graph.nodes(data=True)
-        if attrs.get("node_type") == "InvoiceItem" and _extract_key_part(n, 0) == str(invoice_id)
+        node_id
+        for node_id, attrs in graph.nodes(data=True)
+        if attrs.get("node_type") == "InvoiceItem" and _extract_key_part(node_id, 0) == str(invoice_id)
     ]
 
     delivery_item_nodes: Set[str] = set()
-    for ii in invoice_item_nodes:
-        delivery_item_nodes.update(_safe_predecessors_by_relation(graph, ii, "BILLED_IN"))
+    for invoice_item in invoice_item_nodes:
+        delivery_item_nodes.update(_safe_predecessors_by_relation(graph, invoice_item, "BILLED_IN"))
 
     delivery_nodes: Set[str] = set()
     order_item_nodes: Set[str] = set()
     order_nodes: Set[str] = set()
 
-    for di in delivery_item_nodes:
-        delivery_id = _extract_key_part(di, 0)
+    for delivery_item in delivery_item_nodes:
+        delivery_id = _extract_key_part(delivery_item, 0)
         if delivery_id:
-            dn = _node_id("Delivery", delivery_id)
-            if graph.has_node(dn):
-                delivery_nodes.add(dn)
+            delivery_node = _node_id("Delivery", delivery_id)
+            if graph.has_node(delivery_node):
+                delivery_nodes.add(delivery_node)
 
-        upstream_order_items = _safe_predecessors_by_relation(graph, di, "DELIVERED_IN")
+        upstream_order_items = _safe_predecessors_by_relation(graph, delivery_item, "DELIVERED_IN")
         order_item_nodes.update(upstream_order_items)
-        for oi in upstream_order_items:
-            order_id = _extract_key_part(oi, 0)
+        for order_item in upstream_order_items:
+            order_id = _extract_key_part(order_item, 0)
             if order_id:
-                on = _node_id("Order", order_id)
-                if graph.has_node(on):
-                    order_nodes.add(on)
+                order_node = _node_id("Order", order_id)
+                if graph.has_node(order_node):
+                    order_nodes.add(order_node)
 
     journal_nodes = sorted(_safe_successors_by_relation(graph, invoice_node, "POSTED_AS"))
     payment_nodes = sorted(_safe_successors_by_relation(graph, invoice_node, "PAID_BY"))
 
-    flow_path = "Invoice -> Delivery -> Order and Invoice -> JournalEntry -> Payment"
-    return _json_result(
-        True,
-        "Billing flow traced",
-        {
-            "invoice_id": str(invoice_id),
-            "invoice_node": invoice_node,
-            "invoice_item_count": len(invoice_item_nodes),
-            "delivery_count": len(delivery_nodes),
-            "order_count": len(order_nodes),
-            "journal_count": len(journal_nodes),
-            "payment_count": len(payment_nodes),
-            "deliveries": sorted(delivery_nodes),
-            "delivery_items": sorted(delivery_item_nodes),
-            "orders": sorted(order_nodes),
-            "order_items": sorted(order_item_nodes),
-            "journals": journal_nodes,
-            "payments": payment_nodes,
-            "flow_path": flow_path,
-        },
-    )
+    highlight_nodes = [
+        invoice_node,
+        *sorted(invoice_item_nodes),
+        *sorted(delivery_nodes),
+        *sorted(delivery_item_nodes),
+        *sorted(order_nodes),
+        *sorted(order_item_nodes),
+        *journal_nodes,
+        *payment_nodes,
+    ]
+
+    payload = {
+        "invoice_id": str(invoice_id),
+        "invoice_node": invoice_node,
+        "flow_path": "Invoice -> Delivery -> Order and Invoice -> JournalEntry -> Payment",
+        "invoice_item_count": len(invoice_item_nodes),
+        "delivery_count": len(delivery_nodes),
+        "order_count": len(order_nodes),
+        "journal_count": len(journal_nodes),
+        "payment_count": len(payment_nodes),
+        "deliveries": sorted(delivery_nodes),
+        "delivery_items": sorted(delivery_item_nodes),
+        "orders": sorted(order_nodes),
+        "order_items": sorted(order_item_nodes),
+        "journals": journal_nodes,
+        "payments": payment_nodes,
+    }
+    _attach_visuals(graph, payload, highlight_nodes)
+    return _json_result(True, "Billing flow traced", payload)
 
 
 def find_broken_flows(graph: nx.DiGraph, type: str) -> JSONDict:
-    """Detect inconsistent flow links at item level.
-
-    Supported types:
-    - delivered_not_billed
-    - billed_without_delivery
-    """
     flow_type = (type or "").strip().lower()
     if flow_type not in {"delivered_not_billed", "billed_without_delivery"}:
         return _json_result(False, "Invalid broken flow type", {"type": flow_type})
 
     issues: List[JSONDict] = []
+    highlight_nodes: List[str] = []
 
     if flow_type == "delivered_not_billed":
-        delivery_item_nodes = [n for n, attrs in graph.nodes(data=True) if attrs.get("node_type") == "DeliveryItem"]
-        for di in delivery_item_nodes:
-            invoice_items = _safe_successors_by_relation(graph, di, "BILLED_IN")
+        delivery_item_nodes = [node_id for node_id, attrs in graph.nodes(data=True) if attrs.get("node_type") == "DeliveryItem"]
+        for delivery_item in delivery_item_nodes:
+            invoice_items = _safe_successors_by_relation(graph, delivery_item, "BILLED_IN")
             if invoice_items:
                 continue
             issues.append(
                 {
-                    "delivery_item_node": di,
-                    "delivery_id": _extract_key_part(di, 0),
-                    "delivery_item_id": _extract_key_part(di, 1),
+                    "delivery_item_node": delivery_item,
+                    "delivery_id": _extract_key_part(delivery_item, 0),
+                    "delivery_item_id": _extract_key_part(delivery_item, 1),
                 }
             )
+            highlight_nodes.append(delivery_item)
 
     if flow_type == "billed_without_delivery":
-        invoice_item_nodes = [n for n, attrs in graph.nodes(data=True) if attrs.get("node_type") == "InvoiceItem"]
-        for ii in invoice_item_nodes:
-            delivery_items = _safe_predecessors_by_relation(graph, ii, "BILLED_IN")
+        invoice_item_nodes = [node_id for node_id, attrs in graph.nodes(data=True) if attrs.get("node_type") == "InvoiceItem"]
+        for invoice_item in invoice_item_nodes:
+            delivery_items = _safe_predecessors_by_relation(graph, invoice_item, "BILLED_IN")
             if delivery_items:
                 continue
             issues.append(
                 {
-                    "invoice_item_node": ii,
-                    "invoice_id": _extract_key_part(ii, 0),
-                    "invoice_item_id": _extract_key_part(ii, 1),
+                    "invoice_item_node": invoice_item,
+                    "invoice_id": _extract_key_part(invoice_item, 0),
+                    "invoice_item_id": _extract_key_part(invoice_item, 1),
                 }
             )
+            highlight_nodes.append(invoice_item)
 
-    return _json_result(
-        True,
-        "Broken flow analysis complete",
-        {
-            "type": flow_type,
-            "count": len(issues),
-            "issues": issues,
-        },
-    )
+    payload = {
+        "type": flow_type,
+        "count": len(issues),
+        "issues": issues,
+    }
+    _attach_visuals(graph, payload, highlight_nodes[:300])
+    return _json_result(True, "Broken flow analysis complete", payload)
 
 
 def execute_nl_query(graph: nx.DiGraph, query: str) -> JSONDict:
-    """Lightweight NL router that maps text to query functions.
-
-    Supported intents:
-    - journal by invoice
-    - trace order flow
-    - trace billing flow
-    - broken flow detection
-    - orders without invoice
-    - top products by billing
-    """
     q = (query or "").strip().lower()
     if not q:
         return _json_result(False, "Empty query")
@@ -445,7 +485,7 @@ def execute_nl_query(graph: nx.DiGraph, query: str) -> JSONDict:
 
 def _extract_last_number_like_token(text: str) -> Optional[str]:
     tokens = text.replace(",", " ").split()
-    candidates = [t for t in tokens if any(ch.isdigit() for ch in t)]
+    candidates = [token for token in tokens if any(ch.isdigit() for ch in token)]
     if not candidates:
         return None
     token = candidates[-1]
@@ -456,8 +496,8 @@ def _extract_last_number_like_token(text: str) -> Optional[str]:
 def _extract_limit(text: str) -> Optional[int]:
     tokens = text.replace(",", " ").split()
     ints: List[int] = []
-    for t in tokens:
-        raw = "".join(ch for ch in t if ch.isdigit())
+    for token in tokens:
+        raw = "".join(ch for ch in token if ch.isdigit())
         if raw:
             try:
                 ints.append(int(raw))

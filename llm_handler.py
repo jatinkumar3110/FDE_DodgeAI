@@ -3,6 +3,7 @@ from __future__ import annotations
 import json
 import os
 import re
+from difflib import SequenceMatcher
 from typing import Any, Dict, Optional
 from urllib.error import HTTPError, URLError
 from urllib.request import Request, urlopen
@@ -11,8 +12,8 @@ from query_engine import (
     find_broken_flows,
     find_journal_by_invoice,
     find_orders_without_invoice,
-    trace_billing,
     top_products_by_billing,
+    trace_billing,
     trace_order_flow,
 )
 from query_planner import plan_query
@@ -20,6 +21,7 @@ from query_planner import plan_query
 
 JSONDict = Dict[str, Any]
 
+GUARDRAIL_MESSAGE = "This system is designed to answer ERP dataset queries only."
 
 ALLOWED_INTENTS = {
     "find_journal",
@@ -28,6 +30,44 @@ ALLOWED_INTENTS = {
     "top_products",
     "trace_billing",
     "broken_flows",
+}
+
+INTENT_PHRASES = {
+    "find_journal": [
+        "find journal for invoice",
+        "journal entry for invoice",
+        "invoice posting",
+        "journal for billing",
+    ],
+    "trace_order": [
+        "trace order",
+        "order flow",
+        "order lifecycle",
+        "order to cash trace",
+    ],
+    "orders_without_invoice": [
+        "orders without invoice",
+        "order has delivery but no invoice",
+        "missing invoice orders",
+    ],
+    "top_products": [
+        "top products by billing",
+        "highest billed products",
+        "which products have highest billing",
+        "top invoice products",
+    ],
+    "trace_billing": [
+        "trace billing",
+        "invoice flow",
+        "show invoice flow",
+        "billing document flow",
+    ],
+    "broken_flows": [
+        "broken flow",
+        "delivered not billed",
+        "billed without delivery",
+        "flow anomaly",
+    ],
 }
 
 
@@ -40,7 +80,6 @@ def _post_json(url: str, headers: Dict[str, str], payload: Dict[str, Any], timeo
 
 
 def _extract_json_object(text: str) -> Optional[JSONDict]:
-    # Pull first JSON object from model text to tolerate extra prose.
     match = re.search(r"\{[\s\S]*\}", text)
     if not match:
         return None
@@ -51,24 +90,16 @@ def _extract_json_object(text: str) -> Optional[JSONDict]:
     return obj if isinstance(obj, dict) else None
 
 
+def _normalize_text(text: str) -> str:
+    return re.sub(r"\s+", " ", re.sub(r"[^a-z0-9 ]+", " ", text.lower())).strip()
+
+
 def _is_rejected_query(user_query: str) -> bool:
-    q = (user_query or "").strip().lower()
-    if not q:
+    normalized = _normalize_text(user_query)
+    if not normalized:
         return True
 
-    blocked_patterns = [
-        r"\bwho\s+is\s+pm\b",
-        r"\bwrite\s+(a\s+)?poem\b",
-        r"\bpoem\b",
-        r"\bjoke\b",
-        r"\bstory\b",
-        r"\bweather\b",
-    ]
-    for pattern in blocked_patterns:
-        if re.search(pattern, q):
-            return True
-
-    erp_signals = [
+    erp_keywords = {
         "order",
         "invoice",
         "journal",
@@ -78,51 +109,15 @@ def _is_rejected_query(user_query: str) -> bool:
         "billing",
         "customer",
         "flow",
-        "broken",
-    ]
-    return not any(token in q for token in erp_signals)
-
-
-def _heuristic_parse(user_query: str) -> JSONDict:
-    q = (user_query or "").lower()
-
-    if "journal" in q and "invoice" in q:
-        invoice = _extract_identifier(user_query)
-        if invoice:
-            return {"intent": "find_journal", "invoice_id": invoice}
-
-    if "trace" in q and "order" in q:
-        order_id = _extract_identifier(user_query)
-        if order_id:
-            return {"intent": "trace_order", "order_id": order_id}
-
-    if "trace" in q and ("billing" in q or "invoice" in q):
-        invoice_id = _extract_identifier(user_query)
-        if invoice_id:
-            return {"intent": "trace_billing", "invoice_id": invoice_id}
-
-    if "broken" in q and "flow" in q:
-        if "delivered" in q and "not" in q and "billed" in q:
-            return {"intent": "broken_flows", "type": "delivered_not_billed"}
-        if "billed" in q and "without" in q and "delivery" in q:
-            return {"intent": "broken_flows", "type": "billed_without_delivery"}
-
-    if "without invoice" in q or ("no invoice" in q and "order" in q):
-        return {"intent": "orders_without_invoice"}
-
-    if "top" in q and "product" in q and ("billing" in q or "invoice" in q):
-        limit = _extract_limit(user_query)
-        out: JSONDict = {"intent": "top_products"}
-        if limit is not None:
-            out["limit"] = limit
-        return out
-
-    return {"intent": "unknown"}
+        "erp",
+    }
+    tokens = set(normalized.split())
+    return len(tokens.intersection(erp_keywords)) == 0
 
 
 def _extract_identifier(text: str) -> Optional[str]:
     tokens = re.findall(r"[A-Za-z0-9_-]+", text)
-    candidates = [t for t in tokens if any(ch.isdigit() for ch in t)]
+    candidates = [token for token in tokens if any(ch.isdigit() for ch in token)]
     if not candidates:
         return None
     return candidates[-1]
@@ -136,6 +131,123 @@ def _extract_limit(text: str) -> Optional[int]:
         return int(nums[-1])
     except ValueError:
         return None
+
+
+def _similarity_score(left: str, right: str) -> float:
+    return SequenceMatcher(None, left, right).ratio()
+
+
+def _heuristic_parse(user_query: str) -> JSONDict:
+    q = _normalize_text(user_query)
+
+    if "journal" in q and "invoice" in q:
+        invoice = _extract_identifier(user_query)
+        if invoice:
+            return {"intent": "find_journal", "invoice_id": invoice}
+
+    if "trace" in q and "order" in q:
+        order_id = _extract_identifier(user_query)
+        if order_id:
+            return {"intent": "trace_order", "order_id": order_id}
+
+    if "trace" in q and ("billing" in q or "invoice" in q or "flow" in q):
+        invoice_id = _extract_identifier(user_query)
+        if invoice_id:
+            return {"intent": "trace_billing", "invoice_id": invoice_id}
+        return {"intent": "trace_billing"}
+
+    if "broken" in q and "flow" in q:
+        if "delivered" in q and "not" in q and "billed" in q:
+            return {"intent": "broken_flows", "type": "delivered_not_billed"}
+        if "billed" in q and "without" in q and "delivery" in q:
+            return {"intent": "broken_flows", "type": "billed_without_delivery"}
+        return {"intent": "broken_flows", "type": "delivered_not_billed"}
+
+    if "without invoice" in q or ("no invoice" in q and "order" in q):
+        return {"intent": "orders_without_invoice"}
+
+    if ("top" in q or "highest" in q) and "product" in q and ("billing" in q or "invoice" in q):
+        limit = _extract_limit(user_query)
+        out: JSONDict = {"intent": "top_products"}
+        if limit is not None:
+            out["limit"] = limit
+        return out
+
+    return {"intent": "unknown"}
+
+
+def _keyword_similarity_parse(user_query: str) -> JSONDict:
+    normalized_query = _normalize_text(user_query)
+    if not normalized_query:
+        return {"intent": "unknown"}
+
+    best_intent = "unknown"
+    best_score = 0.0
+
+    for intent, phrases in INTENT_PHRASES.items():
+        for phrase in phrases:
+            score = _similarity_score(normalized_query, _normalize_text(phrase))
+            if phrase in normalized_query:
+                score = max(score, 0.95)
+            if score > best_score:
+                best_score = score
+                best_intent = intent
+
+    if best_score < 0.48:
+        return {"intent": "unknown"}
+
+    if best_intent == "find_journal":
+        invoice_id = _extract_identifier(user_query)
+        return {"intent": "find_journal", "invoice_id": invoice_id} if invoice_id else {"intent": "unknown"}
+
+    if best_intent == "trace_order":
+        order_id = _extract_identifier(user_query)
+        return {"intent": "trace_order", "order_id": order_id} if order_id else {"intent": "unknown"}
+
+    if best_intent == "trace_billing":
+        invoice_id = _extract_identifier(user_query)
+        return {"intent": "trace_billing", "invoice_id": invoice_id} if invoice_id else {"intent": "trace_billing"}
+
+    if best_intent == "top_products":
+        limit = _extract_limit(user_query)
+        out: JSONDict = {"intent": "top_products"}
+        if limit is not None:
+            out["limit"] = limit
+        return out
+
+    if best_intent == "orders_without_invoice":
+        return {"intent": "orders_without_invoice"}
+
+    if best_intent == "broken_flows":
+        q = _normalize_text(user_query)
+        if "billed" in q and "without" in q and "delivery" in q:
+            return {"intent": "broken_flows", "type": "billed_without_delivery"}
+        return {"intent": "broken_flows", "type": "delivered_not_billed"}
+
+    return {"intent": "unknown"}
+
+
+def _sanitize_parsed(parsed: Optional[JSONDict]) -> JSONDict:
+    if not isinstance(parsed, dict):
+        return {"intent": "unknown"}
+
+    intent = parsed.get("intent")
+    if intent not in ALLOWED_INTENTS and intent != "unknown":
+        return {"intent": "unknown"}
+
+    clean: JSONDict = {"intent": intent or "unknown"}
+    if parsed.get("invoice_id") is not None:
+        clean["invoice_id"] = str(parsed.get("invoice_id"))
+    if parsed.get("order_id") is not None:
+        clean["order_id"] = str(parsed.get("order_id"))
+    if parsed.get("type") in {"delivered_not_billed", "billed_without_delivery"}:
+        clean["type"] = parsed.get("type")
+    if parsed.get("limit") is not None:
+        try:
+            clean["limit"] = int(parsed.get("limit"))
+        except (TypeError, ValueError):
+            pass
+    return clean
 
 
 def _query_groq(user_query: str, model: str = "llama-3.1-8b-instant") -> Optional[JSONDict]:
@@ -200,7 +312,7 @@ Allowed intents:
 2. trace_order -> requires order_id
 3. orders_without_invoice -> no params
 4. top_products -> optional limit
-5. trace_billing -> requires invoice_id
+5. trace_billing -> requires invoice_id when present in query
 6. broken_flows -> requires type:
     - delivered_not_billed
     - billed_without_delivery
@@ -209,27 +321,11 @@ If query is unrelated -> return:
 {{"intent": "unknown"}}
 
 Examples:
+Query: Which products have highest billing
+Output: {{"intent": "top_products"}}
 
-Query: Find journal for invoice 91150187
-Output: {{"intent": "find_journal", "invoice_id": "91150187"}}
-
-Query: Trace order 740509
-Output: {{"intent": "trace_order", "order_id": "740509"}}
-
-Query: Show orders without invoice
-Output: {{"intent": "orders_without_invoice"}}
-
-Query: Top 5 products by billing
-Output: {{"intent": "top_products", "limit": 5}}
-
-Query: Trace billing for invoice 90504204
-Output: {{"intent": "trace_billing", "invoice_id": "90504204"}}
-
-Query: Show broken flows delivered not billed
-Output: {{"intent": "broken_flows", "type": "delivered_not_billed"}}
-
-Query: Show broken flows billed without delivery
-Output: {{"intent": "broken_flows", "type": "billed_without_delivery"}}
+Query: show invoice flow
+Output: {{"intent": "trace_billing"}}
 
 User Query:
 {user_query}
@@ -237,15 +333,10 @@ User Query:
 
 
 def parse_query(user_query: str, provider: str = "groq") -> JSONDict:
-    """Parse natural language into structured query JSON.
-
-    provider: "groq" or "gemini"
-    Falls back to heuristic parser if LLM is unavailable or fails.
-    """
     if _is_rejected_query(user_query):
         return {
             "intent": "rejected",
-            "message": "This system only answers ERP dataset queries",
+            "message": GUARDRAIL_MESSAGE,
         }
 
     parsed: Optional[JSONDict] = None
@@ -256,18 +347,18 @@ def parse_query(user_query: str, provider: str = "groq") -> JSONDict:
     elif provider_norm == "gemini":
         parsed = _query_gemini(user_query)
 
-    if not parsed:
-        parsed = _heuristic_parse(user_query)
+    sanitized = _sanitize_parsed(parsed)
 
-    intent = parsed.get("intent") if isinstance(parsed, dict) else None
-    if intent not in ALLOWED_INTENTS and intent != "unknown":
-        return {"intent": "unknown"}
+    if sanitized.get("intent") == "unknown":
+        sanitized = _sanitize_parsed(_heuristic_parse(user_query))
 
-    return parsed
+    if sanitized.get("intent") == "unknown":
+        sanitized = _sanitize_parsed(_keyword_similarity_parse(user_query))
+
+    return sanitized
 
 
 def execute_query(graph: Any, parsed_query: JSONDict) -> JSONDict:
-    """Dispatch parsed query to query_engine functions."""
     intent = (parsed_query or {}).get("intent")
     query_plan = plan_query(parsed_query)
 
@@ -282,7 +373,7 @@ def execute_query(graph: Any, parsed_query: JSONDict) -> JSONDict:
     if intent == "rejected":
         return _attach_plan({
             "ok": False,
-            "message": "This system only answers ERP dataset queries",
+            "message": GUARDRAIL_MESSAGE,
             "data": {},
         })
 
@@ -329,66 +420,63 @@ def execute_query(graph: Any, parsed_query: JSONDict) -> JSONDict:
             )
         return _attach_plan(find_broken_flows(graph, str(flow_type)))
 
-    return _attach_plan({"ok": False, "message": "Unsupported ERP query", "data": {}})
+    return _attach_plan({"ok": False, "message": GUARDRAIL_MESSAGE, "data": {}})
 
 
 def format_response(parsed_query: JSONDict, execution_result: JSONDict) -> str:
-    """Convert structured execution output into concise natural language."""
     intent = (parsed_query or {}).get("intent")
 
     if intent == "rejected":
-        return "This system only answers ERP dataset queries"
+        return GUARDRAIL_MESSAGE
 
     ok = bool((execution_result or {}).get("ok"))
     data = (execution_result or {}).get("data", {}) or {}
 
     if not ok:
-        msg = (execution_result or {}).get("message", "Query failed")
-        return f"Could not complete the query: {msg}."
+        message = (execution_result or {}).get("message", "Query failed")
+        if message == GUARDRAIL_MESSAGE:
+            return GUARDRAIL_MESSAGE
+        return f"Could not complete the query: {message}."
 
     if intent == "find_journal":
         invoice_id = data.get("invoice_id")
         journals = data.get("journal_entries", [])
         if not journals:
-            return f"No journal entry found for invoice {invoice_id}."
-        ids = [j.get("accountingDocument") for j in journals if j.get("accountingDocument")]
-        return f"Found {len(journals)} journal entr{'y' if len(journals)==1 else 'ies'} for invoice {invoice_id}: {', '.join(ids)}."
+            return f"Invoice {invoice_id} has no journal entries in this dataset."
+        ids = [entry.get("accountingDocument") for entry in journals if entry.get("accountingDocument")]
+        return f"Invoice {invoice_id} maps to {len(journals)} journal entr{'y' if len(journals) == 1 else 'ies'}: {', '.join(ids)}."
 
     if intent == "trace_order":
-        order_id = data.get("order_id")
         return (
-            f"Order {order_id} flow: {data.get('delivery_count', 0)} deliveries, "
-            f"{data.get('invoice_count', 0)} invoices, "
-            f"{data.get('journal_count', 0)} journal entries, "
-            f"{data.get('payment_count', 0)} payments."
+            f"Order {data.get('order_id')} has {data.get('delivery_count', 0)} deliveries, "
+            f"{data.get('invoice_count', 0)} invoices, {data.get('journal_count', 0)} journals, "
+            f"and {data.get('payment_count', 0)} payments."
         )
 
     if intent == "orders_without_invoice":
         count = data.get("count", 0)
-        return f"Found {count} orders that have delivery but no invoice."
+        return f"Found {count} order{'s' if count != 1 else ''} with delivery activity but no invoice link."
 
     if intent == "top_products":
         top_products = data.get("top_products", [])
         if not top_products:
-            return "No billed products were found."
+            return "No billed products were found for aggregation."
         preview = ", ".join(
-            f"{p.get('product_id')} ({p.get('invoice_line_count')})" for p in top_products[:5]
+            f"{product.get('product_id')} ({product.get('invoice_line_count')})"
+            for product in top_products[:5]
         )
-        return f"Top billed products: {preview}."
+        return f"Top billed products by invoice-line frequency: {preview}."
 
     if intent == "trace_billing":
-        invoice_id = data.get("invoice_id")
         return (
-            f"Billing flow for invoice {invoice_id}: "
-            f"{data.get('delivery_count', 0)} deliveries, "
-            f"{data.get('order_count', 0)} orders, "
-            f"{data.get('journal_count', 0)} journals, "
-            f"{data.get('payment_count', 0)} payments."
+            f"Invoice {data.get('invoice_id')} touches {data.get('delivery_count', 0)} deliveries, "
+            f"{data.get('order_count', 0)} orders, {data.get('journal_count', 0)} journals, "
+            f"and {data.get('payment_count', 0)} payments."
         )
 
     if intent == "broken_flows":
         flow_type = data.get("type")
         count = data.get("count", 0)
-        return f"Detected {count} broken flow items for type '{flow_type}'."
+        return f"Detected {count} issue item{'s' if count != 1 else ''} for broken flow type '{flow_type}'."
 
-    return "This system only answers ERP dataset queries"
+    return GUARDRAIL_MESSAGE

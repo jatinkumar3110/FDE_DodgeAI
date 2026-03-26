@@ -7,22 +7,27 @@ JSONDict = Dict[str, Any]
 
 
 def plan_query(parsed_query: JSONDict) -> JSONDict:
-    """Translate parsed intent into a simple deterministic query plan."""
+    """Translate parsed intent into a deterministic structured query plan."""
     intent = (parsed_query or {}).get("intent")
 
     if intent == "find_journal":
         return {
             "type": "traversal",
             "entity": "Invoice",
+            "start": "Invoice",
+            "end": "JournalEntry",
             "path": ["Invoice", "JournalEntry"],
             "relation": "POSTED_AS",
         }
 
     if intent == "trace_order":
         return {
-            "type": "flow_trace",
+            "type": "traversal",
             "entity": "Order",
+            "start": "Order",
+            "end": "Payment",
             "path": ["Order", "Delivery", "Invoice", "JournalEntry", "Payment"],
+            "mode": "order_to_cash",
         }
 
     if intent == "orders_without_invoice":
@@ -30,6 +35,7 @@ def plan_query(parsed_query: JSONDict) -> JSONDict:
             "type": "anomaly_detection",
             "entity": "Order",
             "condition": "has_delivery_and_no_invoice",
+            "severity": "high",
         }
 
     if intent == "top_products":
@@ -39,20 +45,25 @@ def plan_query(parsed_query: JSONDict) -> JSONDict:
             "group_by": "product_id",
             "metric": "count",
             "limit": parsed_query.get("limit", 5),
+            "sort": "desc",
         }
 
     if intent == "trace_billing":
         return {
-            "type": "flow_trace",
+            "type": "traversal",
             "entity": "Invoice",
+            "start": "Invoice",
+            "end": "Order",
             "path": ["Invoice", "Delivery", "Order", "JournalEntry", "Payment"],
+            "mode": "billing_to_order",
         }
 
     if intent == "broken_flows":
         return {
             "type": "anomaly_detection",
-            "entity": "Flow",
+            "entity": "DeliveryItem|InvoiceItem",
             "condition": parsed_query.get("type", "unknown"),
+            "severity": "medium",
         }
 
     return {

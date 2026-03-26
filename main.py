@@ -44,6 +44,38 @@ def health():
     }
 
 
+@app.get("/graph")
+def graph_endpoint() -> Dict[str, Any]:
+    if GRAPH is None:
+        raise HTTPException(status_code=503, detail="Graph is not loaded")
+
+    nodes = []
+    for node_id, attrs in GRAPH.nodes(data=True):
+        node_type = attrs.get("node_type", "Unknown")
+        node_key = attrs.get("key") or str(node_id)
+        nodes.append(
+            {
+                "id": str(node_id),
+                "label": str(node_key),
+                "type": node_type,
+                "source_entity": attrs.get("source_entity"),
+            }
+        )
+
+    links = [
+        {
+            "source": str(source),
+            "target": str(target),
+        }
+        for source, target in GRAPH.edges()
+    ]
+
+    return {
+        "nodes": nodes,
+        "links": links,
+    }
+
+
 @app.post("/query")
 def query_endpoint(payload: QueryRequest) -> Dict[str, Any]:
     start_time = time.time()
@@ -62,6 +94,7 @@ def query_endpoint(payload: QueryRequest) -> Dict[str, Any]:
         result = execute_query(GRAPH, parsed_query)
         print("Execution Result:", result)
         answer = format_response(parsed_query, result)
+        highlight_nodes = result.get("data", {}).get("highlight_nodes", [])
 
         end_time = time.time()
         execution_time_ms = int((end_time - start_time) * 1000)
@@ -70,6 +103,7 @@ def query_endpoint(payload: QueryRequest) -> Dict[str, Any]:
             "parsed_query": parsed_query,
             "result": result,
             "answer": answer,
+            "highlight_nodes": highlight_nodes,
             "execution_time_ms": execution_time_ms,
         }
     except HTTPException:
