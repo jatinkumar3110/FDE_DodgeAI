@@ -62,7 +62,8 @@ function App() {
         role: "system",
         text: data?.answer || "No response",
         parsedQuery: data?.parsed_query,
-        executionMs: data?.result?.execution_ms || elapsedMs,
+        result: data?.result,
+        executionMs: data?.execution_time_ms || elapsedMs,
       };
 
       setMessages((prev) => [...prev, systemMessage]);
@@ -99,6 +100,29 @@ function App() {
                   <details className="meta-box">
                     <summary>Parsed query</summary>
                     <pre>{JSON.stringify(message.parsedQuery, null, 2)}</pre>
+                  </details>
+                )}
+
+                {message.role === "system" && message.result && (
+                  <details className="meta-box">
+                    <summary>Structured result</summary>
+                    {message.result?.data?.flow_path ? (
+                      <div className="meta-time">Flow: {message.result.data.flow_path}</div>
+                    ) : null}
+                    {message.result?.data?.order_count !== undefined ||
+                    message.result?.data?.delivery_count !== undefined ||
+                    message.result?.data?.invoice_count !== undefined ||
+                    message.result?.data?.journal_count !== undefined ||
+                    message.result?.data?.payment_count !== undefined ? (
+                      <div className="meta-time">
+                        Counts: order={message.result?.data?.order_count ?? 0}, delivery=
+                        {message.result?.data?.delivery_count ?? 0}, invoice=
+                        {message.result?.data?.invoice_count ?? 0}, journal=
+                        {message.result?.data?.journal_count ?? 0}, payment=
+                        {message.result?.data?.payment_count ?? 0}
+                      </div>
+                    ) : null}
+                    <pre>{JSON.stringify(message.result, null, 2)}</pre>
                   </details>
                 )}
 

@@ -224,7 +224,7 @@ def find_orders_without_invoice(graph: nx.DiGraph) -> JSONDict:
     )
 
 
-def top_products_by_billing(graph: nx.DiGraph, limit: int = 10) -> JSONDict:
+def top_products_by_billing(graph: nx.DiGraph, limit: int = 5) -> JSONDict:
     """Count product frequency in invoiced items.
 
     Traversal:
@@ -279,12 +279,128 @@ def top_products_by_billing(graph: nx.DiGraph, limit: int = 10) -> JSONDict:
     )
 
 
+def trace_billing(graph: nx.DiGraph, invoice_id: str) -> JSONDict:
+    """Trace Invoice -> Delivery -> Order and Invoice -> Journal/Payment."""
+    invoice_node = _node_id("Invoice", str(invoice_id))
+    if not graph.has_node(invoice_node):
+        return _json_result(False, "Invoice not found", {"invoice_id": invoice_id})
+
+    invoice_item_nodes = [
+        n
+        for n, attrs in graph.nodes(data=True)
+        if attrs.get("node_type") == "InvoiceItem" and _extract_key_part(n, 0) == str(invoice_id)
+    ]
+
+    delivery_item_nodes: Set[str] = set()
+    for ii in invoice_item_nodes:
+        delivery_item_nodes.update(_safe_predecessors_by_relation(graph, ii, "BILLED_IN"))
+
+    delivery_nodes: Set[str] = set()
+    order_item_nodes: Set[str] = set()
+    order_nodes: Set[str] = set()
+
+    for di in delivery_item_nodes:
+        delivery_id = _extract_key_part(di, 0)
+        if delivery_id:
+            dn = _node_id("Delivery", delivery_id)
+            if graph.has_node(dn):
+                delivery_nodes.add(dn)
+
+        upstream_order_items = _safe_predecessors_by_relation(graph, di, "DELIVERED_IN")
+        order_item_nodes.update(upstream_order_items)
+        for oi in upstream_order_items:
+            order_id = _extract_key_part(oi, 0)
+            if order_id:
+                on = _node_id("Order", order_id)
+                if graph.has_node(on):
+                    order_nodes.add(on)
+
+    journal_nodes = sorted(_safe_successors_by_relation(graph, invoice_node, "POSTED_AS"))
+    payment_nodes = sorted(_safe_successors_by_relation(graph, invoice_node, "PAID_BY"))
+
+    flow_path = "Invoice -> Delivery -> Order and Invoice -> JournalEntry -> Payment"
+    return _json_result(
+        True,
+        "Billing flow traced",
+        {
+            "invoice_id": str(invoice_id),
+            "invoice_node": invoice_node,
+            "invoice_item_count": len(invoice_item_nodes),
+            "delivery_count": len(delivery_nodes),
+            "order_count": len(order_nodes),
+            "journal_count": len(journal_nodes),
+            "payment_count": len(payment_nodes),
+            "deliveries": sorted(delivery_nodes),
+            "delivery_items": sorted(delivery_item_nodes),
+            "orders": sorted(order_nodes),
+            "order_items": sorted(order_item_nodes),
+            "journals": journal_nodes,
+            "payments": payment_nodes,
+            "flow_path": flow_path,
+        },
+    )
+
+
+def find_broken_flows(graph: nx.DiGraph, type: str) -> JSONDict:
+    """Detect inconsistent flow links at item level.
+
+    Supported types:
+    - delivered_not_billed
+    - billed_without_delivery
+    """
+    flow_type = (type or "").strip().lower()
+    if flow_type not in {"delivered_not_billed", "billed_without_delivery"}:
+        return _json_result(False, "Invalid broken flow type", {"type": flow_type})
+
+    issues: List[JSONDict] = []
+
+    if flow_type == "delivered_not_billed":
+        delivery_item_nodes = [n for n, attrs in graph.nodes(data=True) if attrs.get("node_type") == "DeliveryItem"]
+        for di in delivery_item_nodes:
+            invoice_items = _safe_successors_by_relation(graph, di, "BILLED_IN")
+            if invoice_items:
+                continue
+            issues.append(
+                {
+                    "delivery_item_node": di,
+                    "delivery_id": _extract_key_part(di, 0),
+                    "delivery_item_id": _extract_key_part(di, 1),
+                }
+            )
+
+    if flow_type == "billed_without_delivery":
+        invoice_item_nodes = [n for n, attrs in graph.nodes(data=True) if attrs.get("node_type") == "InvoiceItem"]
+        for ii in invoice_item_nodes:
+            delivery_items = _safe_predecessors_by_relation(graph, ii, "BILLED_IN")
+            if delivery_items:
+                continue
+            issues.append(
+                {
+                    "invoice_item_node": ii,
+                    "invoice_id": _extract_key_part(ii, 0),
+                    "invoice_item_id": _extract_key_part(ii, 1),
+                }
+            )
+
+    return _json_result(
+        True,
+        "Broken flow analysis complete",
+        {
+            "type": flow_type,
+            "count": len(issues),
+            "issues": issues,
+        },
+    )
+
+
 def execute_nl_query(graph: nx.DiGraph, query: str) -> JSONDict:
     """Lightweight NL router that maps text to query functions.
 
     Supported intents:
     - journal by invoice
     - trace order flow
+    - trace billing flow
+    - broken flow detection
     - orders without invoice
     - top products by billing
     """
@@ -303,6 +419,19 @@ def execute_nl_query(graph: nx.DiGraph, query: str) -> JSONDict:
         if token is None:
             return _json_result(False, "Order ID not found in query")
         return trace_order_flow(graph, token)
+
+    if "trace" in q and "billing" in q:
+        token = _extract_last_number_like_token(query)
+        if token is None:
+            return _json_result(False, "Invoice ID not found in query")
+        return trace_billing(graph, token)
+
+    if "broken" in q and "flow" in q:
+        if "delivered" in q and "billed" in q and "not" in q:
+            return find_broken_flows(graph, "delivered_not_billed")
+        if "billed" in q and "without delivery" in q:
+            return find_broken_flows(graph, "billed_without_delivery")
+        return _json_result(False, "Broken flow type not recognized")
 
     if "without invoice" in q or ("no invoice" in q and "order" in q):
         return find_orders_without_invoice(graph)
