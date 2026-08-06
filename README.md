@@ -1,7 +1,7 @@
 Important info for FDE_Dodge AI Team: Backend is hosted on Render free tier and may take ~20–30 seconds to wake up on first request.
 
 # AI-Powered ERP O2C Graph Query System
-https://drive.google.com/drive/folders/141y1HDLaixyQCmne1ICr-bzzLSdR8IKc
+https://drive.google.com/drive/folders/1WiBhLWRhE4QvpGwS8l91sC8jTW4SR77h?usp=sharing
 
 ## 1. Problem Statement
 Enterprise Order-to-Cash data is operationally critical but structurally fragmented across many ERP entities, such as sales orders, deliveries, invoices, journal entries, and payments. In a traditional relational view, answering process-level questions often requires multi-step joins, table-level context, and domain expertise. This creates friction for both technical and business users.
